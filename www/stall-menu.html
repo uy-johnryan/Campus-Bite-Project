@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusBite - Stall Menu</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="screen-container home-layout">
+        
+        <!-- Top Navigation Bar -->
+        <header class="top-nav">
+            <button type="button" class="nav-btn back-btn" onclick="history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="nav-actions">
+                <button class="pill-btn" onclick="location.href='home.html'">Home</button>
+                <!-- Stalls is active here to reflect being inside a stall view -->
+                <button class="pill-btn active">Stalls</button>
+            </div>
+        </header>
+
+        <!-- Stall Menu Main View -->
+        <main class="content-view stall-menu-container">
+            
+            <!-- Stall Banner / Header -->
+            <div class="stall-banner">
+                <span class="banner-placeholder">Stall Logo</span>
+
+                <img src="assets/img/ChickyFrydayLogo.jpg"
+                    alt="Chicky Fryday Logo"
+                    class="stall-logo"
+                    onerror="this.style.display='none'">
+            </div>
+
+            <!-- Sub-category Filters (Popular, Food, Drink) -->
+            <div class="sub-category-filters">
+                <button class="sub-pill active">Popular</button>
+                <button class="sub-pill">Food</button>
+                <button class="sub-pill">Drink</button>
+            </div>
+
+            <!-- Stall Menu Grid Items -->
+            <div class="food-grid">
+                <!-- Item 1 -->
+                <div class="food-card green">
+                    <div class="image-wrapper">
+                        <img src="https://via.placeholder.com/150" alt="Small Ice Tea">
+                        <button class="favorite-btn"><i class="fa-regular fa-heart"></i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="text-info">
+                            <h3>Small Ice Tea</h3>
+                            <p class="price">P 15</p>
+                        </div>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i> <span>4.2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="food-card green">
+                    <div class="image-wrapper">
+                        <img src="https://via.placeholder.com/150" alt="Chicken Pops">
+                        <button class="favorite-btn"><i class="fa-regular fa-heart"></i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="text-info">
+                            <h3>Chicken Pops</h3>
+                            <p class="price">P 85</p>
+                        </div>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i> <span>4.5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="food-card green">
+                    <div class="image-wrapper">
+                        <img src="https://via.placeholder.com/150" alt="Chicken Skin">
+                        <button class="favorite-btn"><i class="fa-regular fa-heart"></i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="text-info">
+                            <h3>Chicken Skin</h3>
+                            <p class="price">P 90</p>
+                        </div>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i> <span>4.5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="food-card pink">
+                    <div class="image-wrapper">
+                        <img src="https://via.placeholder.com/150" alt="BBQ Chicken Rice Bowl">
+                        <button class="favorite-btn"><i class="fa-regular fa-heart"></i></button>
+                    </div>
+                    <div class="card-details">
+                        <div class="text-info">
+                            <h3>BBQ Chicken Rice Bowl</h3>
+                            <p class="price">P 85</p>
+                        </div>
+                        <div class="rating">
+                            <i class="fa-solid fa-star"></i> <span>4.2</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button type="button" class="nav-item">
+                <i class="fa-regular fa-user"></i>
+                <span>Profile</span>
+            </button>
+            <button type="button" class="nav-item">
+                <i class="fa-regular fa-heart"></i>
+                <span>Favorites</span>
+            </button>
+            <button type="button" class="nav-item" onclick="location.href='track.html'">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Track</span>
+            </button>
+            <button type="button" class="nav-item" onclick="location.href='order.html'">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Order</span>
+            </button>
+        </nav>
+    </div>
+</body>
+</html>

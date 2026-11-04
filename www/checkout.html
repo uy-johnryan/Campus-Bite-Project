@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CampusBite - Checkout</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="screen-container checkout-layout">
+        
+        <!-- Top Navigation Bar with Close Button -->
+        <header class="top-nav-checkout">
+            <button type="button" class="nav-btn close-btn" onclick="location.href='home.html'">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h1 class="page-title">Checkout</h1>
+        </header>
+
+        <!-- Checkout Scrollable Content -->
+        <main class="checkout-content">
+            
+            <!-- Payment Method Card -->
+            <div class="checkout-card payment-card">
+                <h3 class="card-section-title">Payment</h3>
+                <div class="payment-options">
+                    <!-- Selected Cash Option -->
+                    <div class="payment-option selected">
+                        <span class="payment-label">Cash</span>
+                        <div class="payment-box">
+                            <i class="fa-solid fa-money-bill-wave cash-icon"></i>
+                        </div>
+                    </div>
+                    <!-- GCash Option -->
+                    <div class="payment-option">
+                        <span class="payment-label">GCash</span>
+                        <div class="payment-box">
+                            <span class="gcash-logo">G</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Your Order Card -->
+            <div class="checkout-card order-summary-card">
+                <h3 class="card-section-title">Your Order</h3>
+                
+                <div class="summary-item-row">
+                    <span class="item-qty">1</span>
+                    <span class="item-name">Chicken Pops</span>
+                    <span class="item-price">P 85.00</span>
+                </div>
+
+                <div class="summary-item-row">
+                    <span class="item-qty">1</span>
+                    <span class="item-name">Small Iced Tea</span>
+                    <span class="item-price">P 15.00</span>
+                </div>
+
+                <div class="order-totals">
+                    <div class="summary-row">
+                        <span>SubTotal</span>
+                        <span>P 100.00</span>
+                    </div>
+                    <div class="summary-row service-fee">
+                        <span>Service Fee</span>
+                        <span>P 5.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>P 105.00</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Bottom Footer Container -->
+        <div class="checkout-bottom-footer">
+            <div class="footer-info-row">
+                <span class="products-count">2 Products</span>
+                <span class="footer-total">Total: P 105.00</span>
+            </div>
+            <button type="button" class="send-order-btn" onclick=" location.href='home.html'">
+                Send Order
+            </button>
+        </div>
+
+    </div>
+    <script src ="cordova.js"></script>
+    <script src ="js/index.js"></script>
+</body>
+</html>
