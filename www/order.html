@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +10,7 @@
 </head>
 <body>
     <div class="screen-container order-layout">
-        
+
         <!-- Top Navigation Bar -->
         <header class="top-nav-order">
             <button type="button" class="nav-btn back-btn" onclick="history.back()">
@@ -18,94 +19,23 @@
             <h1 class="page-title">Order</h1>
         </header>
 
-        <!-- Orders List Container -->
-        <main class="order-content">
-                
-            <!-- Stall 1 Order Card -->
-            <div class="order-card">
-                <h3 class="stall-title">Stall 1</h3>
-                
-                <div class="order-item">
-                    <button class="delete-btn"><i class="fa-regular fa-trash-can"></i></button>
-                    <div class="qty-controls">
-                        <button class="qty-btn minus">-</button>
-                        <button class="qty-btn plus">+</button>
-                    </div>
-                    <span class="item-qty">1</span>
-                    <span class="item-name">Chicken Pops</span>
-                    <span class="item-price">P 85.00</span>
-                </div>
-
-                <div class="order-item">
-                    <button class="delete-btn"><i class="fa-regular fa-trash-can"></i></button>
-                    <div class="qty-controls">
-                        <button class="qty-btn minus">-</button>
-                        <button class="qty-btn plus">+</button>
-                    </div>
-                    <span class="item-qty">1</span>
-                    <span class="item-name">Small Iced Tea</span>
-                    <span class="item-price">P 15.00</span>
-                </div>
-
-                <div class="order-summary">
-                    <div class="summary-row">
-                        <span>SubTotal</span>
-                        <span>P 100.00</span>
-                    </div>
-                    <div class="summary-row service-fee">
-                        <span>Service Fee</span>
-                        <span>P 5.00</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Total</span>
-                        <span>P 105.00</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Stall 3 Order Card -->
-            <div class="order-card">
-                <h3 class="stall-title">Stall 3</h3>
-                
-                <div class="order-item">
-                    <button class="delete-btn"><i class="fa-regular fa-trash-can"></i></button>
-                    <div class="qty-controls">
-                        <button class="qty-btn minus">-</button>
-                        <button class="qty-btn plus">+</button>
-                    </div>
-                    <span class="item-qty">1</span>
-                    <span class="item-name">Jumbo Fries</span>
-                    <span class="item-price">P 75.00</span>
-                </div>
-
-                <div class="order-summary">
-                    <div class="summary-row">
-                        <span>SubTotal</span>
-                        <span>P 75.00</span>
-                    </div>
-                    <div class="summary-row service-fee">
-                        <span>Service Fee</span>
-                        <span>P 5.00</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Total</span>
-                        <span>P 80.00</span>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Dynamic Orders List -->
+        <main class="order-content" id="order-container">
+            <p>Loading your orders...</p>
         </main>
 
         <!-- Fixed Bottom Checkout Section -->
         <div class="checkout-footer">
-            <button type="button" class="checkout-btn" onclick="location.href='checkout.html'">
+            <button type="button" class="checkout-btn" id="checkout-btn">
                 <span>Checkout</span>
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
 
     </div>
-    <script src ="cordova.js"></script>
-    <script src ="js/index.js"></script>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/order.js"></script>
 </body>
 </html>

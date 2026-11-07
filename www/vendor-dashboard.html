@@ -9,143 +9,59 @@
 </head>
 <body>
     <div class="screen-container vendor-layout">
-        
+    
         <!-- Top Filter Controls -->
         <header class="vendor-header">
-            <button class="nav-btn menu-btn">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-            <div class="filter-pills-grid">
-                <button class="filter-pill active">All (3)</button>
-                <button class="filter-pill">Incoming Orders (1)</button>
-                <button class="filter-pill">Ready (1)</button>
-                <button class="filter-pill">In Progress (1)</button>
-                <button class="filter-pill">No Show</button>
-                <button class="filter-pill">Completed</button>
+
+            <div class="vendor-menu-wrapper">
+                <button type="button" class="nav-btn menu-btn" id="menu-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="vendor-dropdown" id="vendor-dropdown">
+                    <button type="button" id="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Logout
+                    </button>
+                </div>
             </div>
+
+            <div class="filter-pills-grid">
+                <button class="filter-pill active" data-filter="all">
+                    All (0)
+                </button>
+
+                <button class="filter-pill" data-filter="pending">
+                    Incoming Orders (0)
+                </button>
+
+                <button class="filter-pill" data-filter="ready">
+                    Ready (0)
+                </button>
+
+                <button class="filter-pill" data-filter="in-progress">
+                    In Progress (0)
+                </button>
+
+                <button class="filter-pill" data-filter="no_show">
+                    No Show (0)
+                </button>
+
+                <button class="filter-pill" data-filter="completed">
+                    Completed (0)
+                </button>
+            </div>
+
         </header>
 
         <!-- Orders Stream Container -->
-        <main class="vendor-orders-list">
-            
-            <!-- Card 1: READY State (Green Badge) -->
-            <div class="vendor-order-card">
-                <div class="card-top-bar">
-                    <span class="status-badge ready">READY as of 12:00 PM</span>
-                    <button class="action-btn-outline">Mark as No Show</button>
-                </div>
-
-                <div class="vendor-order-items">
-                    <div class="vendor-item-row">
-                        <span class="item-qty">1</span>
-                        <span class="item-name">Cheese Mega Fries</span>
-                        <span class="item-price">P 129.00</span>
-                    </div>
-                    <div class="vendor-item-row">
-                        <span class="item-qty">1</span>
-                        <span class="item-name">Sour&Cream Regular Fries</span>
-                        <span class="item-price">P 42.00</span>
-                    </div>
-                </div>
-
-                <div class="order-totals">
-                    <div class="summary-row">
-                        <span>SubTotal</span>
-                        <span>P 171.00</span>
-                    </div>
-                    <div class="summary-row service-fee">
-                        <span>Service Fee</span>
-                        <span>P 5.00</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Total</span>
-                        <span>P 176.00</span>
-                    </div>
-                </div>
-
-                <div class="card-footer-info">
-                    <span class="customer-name">Name: Paul</span>
-                    <span class="vendor-order-id">Order ID: ORDER-3571</span>
-                </div>
-            </div>
-
-            <!-- Card 2: IN PROGRESS State (Yellow Badge) -->
-            <div class="vendor-order-card">
-                <div class="card-top-bar">
-                    <span class="status-badge in-progress">IN PROGRESS</span>
-                    <button class="action-btn-outline">Ready in 5 -10 Mins</button>
-                </div>
-
-                <div class="vendor-order-items">
-                    <div class="vendor-item-row">
-                        <span class="item-qty">1</span>
-                        <span class="item-name">Cheese Jumbo Fries</span>
-                        <span class="item-price">P 99.00</span>
-                    </div>
-                </div>
-
-                <div class="order-totals">
-                    <div class="summary-row">
-                        <span>SubTotal</span>
-                        <span>P 99.00</span>
-                    </div>
-                    <div class="summary-row service-fee">
-                        <span>Service Fee</span>
-                        <span>P 5.00</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Total</span>
-                        <span>P 104.00</span>
-                    </div>
-                </div>
-
-                <div class="card-footer-info">
-                    <span class="customer-name">Name: John</span>
-                    <span class="vendor-order-id">Order ID: ORDER-1234</span>
-                </div>
-            </div>
-
-            <!-- Card 3: INCOMING State (Cyan Badge) -->
-            <div class="vendor-order-card">
-                <div class="card-top-bar">
-                    <span class="status-badge incoming">INCOMING</span>
-                    <div class="decision-buttons">
-                        <button class="reject-btn"><i class="fa-solid fa-xmark"></i></button>
-                        <button class="accept-btn"><i class="fa-solid fa-check"></i></button>
-                    </div>
-                </div>
-
-                <div class="vendor-order-items">
-                    <div class="vendor-item-row">
-                        <span class="item-qty">1</span>
-                        <span class="item-name">BBQ Giga Fries</span>
-                        <span class="item-price">P 200.00</span>
-                    </div>
-                </div>
-
-                <div class="order-totals">
-                    <div class="summary-row">
-                        <span>SubTotal</span>
-                        <span>P 200.00</span>
-                    </div>
-                    <div class="summary-row service-fee">
-                        <span>Service Fee</span>
-                        <span>P 5.00</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Total</span>
-                        <span>P 205.00</span>
-                    </div>
-                </div>
-
-                <div class="card-footer-info">
-                    <span class="customer-name">Name: Alexander</span>
-                </div>
-            </div>
-
+        <main class="vendor-orders-list" id="vendor-orders-list">
+            <p class="vendor-message">Loading orders...</p>
         </main>
+
     </div>
     <script src ="cordova.js"></script>
     <script src ="js/index.js"></script>
+    <script src="js/vendor-dashboard.js"></script>
 </body>
 </html>

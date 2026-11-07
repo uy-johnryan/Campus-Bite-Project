@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CampusBite - Track Order</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="screen-container track-layout">
+        
+        <!-- Top Navigation Bar -->
+        <header class="top-nav-track">
+            <button type="button" class="nav-btn back-btn" onclick="history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h1 class="page-title">Track</h1>
+            <span class="stall-header-tag" id="stall-header-tag">Loading...</span>
+        </header>
+
+        <!-- Scrollable Track Content -->
+        <main class="track-content">
+            
+            <!-- Order Status Section -->
+            <section class="track-section">
+                <h2 class="section-title">Order Status</h2>
+
+                <div class="status-banner" id="status-banner">
+                    <p class="status-main" id="status-main">Loading status...</p>
+                    <p class="status-sub" id="status-sub">
+                        Please wait while we retrieve your order.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Order Timeline Section -->
+            <section class="track-section">
+                <h2 class="section-title">Order Timeline</h2>
+
+                <div class="timeline-card" id="timeline-container">
+                    <p>Loading order timeline...</p>
+                </div>
+            </section>
+
+            <!-- Order Details Section -->
+            <section class="track-section">
+                <h2 class="section-title">Order Details</h2>
+
+                <div class="details-card" id="order-details">
+                    <p>Loading order details...</p>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button type="button" class="nav-item" onclick="location.href='profile.html'">
+                <i class="fa-regular fa-user"></i>
+                <span>Profile</span>
+            </button>
+
+            <button type="button" class="nav-item" onclick="location.href='favorite.html'">
+                <i class="fa-regular fa-heart"></i>
+                <span>Favorites</span>
+            </button>
+
+            <button type="button" class="nav-item" onclick="location.href='track.html'">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Track</span>
+            </button>
+
+            <button type="button" class="nav-item" onclick="location.href='order.html'">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Order</span>
+            </button>
+        </nav>
+    </div>
+    <script src ="cordova.js"></script>
+    <script src ="js/index.js"></script>
+    <script src="js/track-order.js"></script>
+</body>
+</html>

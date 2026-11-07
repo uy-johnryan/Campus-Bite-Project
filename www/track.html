@@ -3,130 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CampusBite - Track Order</title>
+    <title>CampusBite - My Orders</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="screen-container track-layout">
-        
-        <!-- Top Navigation Bar -->
+
+        <!-- Top Navigation -->
         <header class="top-nav-track">
             <button type="button" class="nav-btn back-btn" onclick="history.back()">
                 <i class="fa-solid fa-arrow-left"></i>
             </button>
-            <h1 class="page-title">Track</h1>
-            <span class="stall-header-tag">Stall 3</span>
+            <h1 class="page-title">My Orders</h1>
+            <span></span>
         </header>
 
-        <!-- Scrollable Track Content -->
+        <!-- Orders List -->
         <main class="track-content">
-            
-            <!-- Order Status Section -->
+
             <section class="track-section">
-                <h2 class="section-title">Order Status</h2>
-                <div class="status-banner">
-                    <p class="status-main">Status Preparing</p>
-                    <p class="status-sub">Estimated Time : 5 - 10 mins</p>
-                </div>
-            </section>
+                <h2 class="section-title">Your Orders</h2>
 
-            <!-- Order Timeline Section -->
-            <section class="track-section">
-                <h2 class="section-title">Order Timeline</h2>
-                <div class="timeline-card">
-                    
-                    <!-- Timeline Item 1 (Completed) -->
-                    <div class="timeline-item completed">
-                        <div class="timeline-icon-col">
-                            <span class="icon-box check"><i class="fa-solid fa-check"></i></span>
-                            <span class="timeline-line"></span>
-                        </div>
-                        <div class="timeline-info">
-                            <span class="timeline-label">Order Submitted</span>
-                            <span class="timeline-time">12:29 PM</span>
-                        </div>
-                    </div>
-
-                    <!-- Timeline Item 2 (Completed) -->
-                    <div class="timeline-item completed">
-                        <div class="timeline-icon-col">
-                            <span class="icon-box check"><i class="fa-solid fa-check"></i></span>
-                            <span class="timeline-line"></span>
-                        </div>
-                        <div class="timeline-info">
-                            <span class="timeline-label">Accepted by Vendor</span>
-                            <span class="timeline-time">12:30 PM</span>
-                        </div>
-                    </div>
-
-                    <!-- Timeline Item 3 (In Progress) -->
-                    <div class="timeline-item in-progress">
-                        <div class="timeline-icon-col">
-                            <span class="icon-box minus"><i class="fa-solid fa-minus"></i></span>
-                            <span class="timeline-line"></span>
-                        </div>
-                        <div class="timeline-info">
-                            <span class="timeline-label">Preparing food ...</span>
-                            <span class="timeline-status">In Progress</span>
-                        </div>
-                    </div>
-
-                    <!-- Timeline Item 4 (Pending) -->
-                    <div class="timeline-item pending">
-                        <div class="timeline-icon-col">
-                            <span class="icon-box square"></span>
-                        </div>
-                        <div class="timeline-info">
-                            <span class="timeline-label">Ready for Pickup</span>
-                            <span class="timeline-status">Pending</span>
-                        </div>
-                    </div>
-
-                </div>
-            </section>
-
-            <!-- Order Details Section -->
-            <section class="track-section">
-                <h2 class="section-title">Order Details</h2>
-                <div class="details-card">
-                    <p><strong>Stall:</strong> XU Main Canteen - 3</p>
-                    <p><strong>Customer:</strong> John</p>
-                    <p><strong>Items:</strong> 1 Cheese Jumbo Fries</p>
-                    <p><strong>Subtotal:</strong> P99.00</p>
-                    <p><strong>Service Fee:</strong> P5.00</p>
-                    <p><strong>Total Paid:</strong> P104.00 (Cash)</p>
-                    <br>
-                    <p><strong>Order ID:</strong> ORDER-1234</p>
+                <div id="orders-container">
+                    <p class="orders-message">Loading your orders...</p>
                 </div>
             </section>
 
         </main>
 
-        <!-- Bottom Navigation Bar (Track Active) -->
+        <!-- Bottom Navigation -->
         <nav class="bottom-nav">
-            <button type="button" class="nav-item"
-                onclick="location.href='profile.html'">
+            <button type="button" class="nav-item" onclick="location.href='profile.html'">
                 <i class="fa-regular fa-user"></i>
                 <span>Profile</span>
             </button>
 
-            <button type="button" class="nav-item"
-                onclick="location.href='favorite.html'">
+            <button type="button" class="nav-item" onclick="location.href='favorite.html'">
                 <i class="fa-regular fa-heart"></i>
                 <span>Favorites</span>
             </button>
-            <button type="button" class="nav-item" onclick="location.href='track.html'">
+
+            <button type="button" class="nav-item active" onclick="location.href='track.html'">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <span>Track</span>
             </button>
-            <button type="button" class="nav-item" onclick="location.href='order.html'">        
+
+            <button type="button" class="nav-item" onclick="location.href='order.html'">
                 <i class="fa-solid fa-cart-shopping"></i>
                 <span>Order</span>
             </button>
         </nav>
+
     </div>
-    <script src ="cordova.js"></script>
-    <script src ="js/index.js"></script>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/track.js"></script>
 </body>
 </html>

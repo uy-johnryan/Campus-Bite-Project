@@ -9,8 +9,8 @@
 </head>
 <body>
     <div class="screen-container checkout-layout">
-        
-        <!-- Top Navigation Bar with Close Button -->
+
+        <!-- Top Navigation Bar -->
         <header class="top-nav-checkout">
             <button type="button" class="nav-btn close-btn" onclick="location.href='home.html'">
                 <i class="fa-solid fa-xmark"></i>
@@ -18,77 +18,65 @@
             <h1 class="page-title">Checkout</h1>
         </header>
 
-        <!-- Checkout Scrollable Content -->    
+        <!-- Checkout Content -->
         <main class="checkout-content">
-            
+
             <!-- Payment Method Card -->
             <div class="checkout-card payment-card">
                 <h3 class="card-section-title">Payment</h3>
+
                 <div class="payment-options">
-                    <!-- Selected Cash Option -->
-                    <div class="payment-option selected">
+
+                    <div class="payment-option selected" data-payment="cash">
                         <span class="payment-label">Cash</span>
                         <div class="payment-box">
                             <i class="fa-solid fa-money-bill-wave cash-icon"></i>
                         </div>
                     </div>
-                    <!-- GCash Option -->
-                    <div class="payment-option">
+
+                    <div class="payment-option" data-payment="gcash">
                         <span class="payment-label">GCash</span>
                         <div class="payment-box">
                             <span class="gcash-logo">G</span>
                         </div>
                     </div>
+
                 </div>
             </div>
 
             <!-- Your Order Card -->
             <div class="checkout-card order-summary-card">
                 <h3 class="card-section-title">Your Order</h3>
-                
-                <div class="summary-item-row">
-                    <span class="item-qty">1</span>
-                    <span class="item-name">Chicken Pops</span>
-                    <span class="item-price">P 85.00</span>
+
+                <div id="checkout-items">
+                    <p>Loading your order...</p>
                 </div>
 
-                <div class="summary-item-row">
-                    <span class="item-qty">1</span>
-                    <span class="item-name">Small Iced Tea</span>
-                    <span class="item-price">P 15.00</span>
-                </div>
-
-                <div class="order-totals">
-                    <div class="summary-row">
-                        <span>SubTotal</span>
-                        <span>P 100.00</span>
-                    </div>
-                    <div class="summary-row service-fee">
-                        <span>Service Fee</span>
-                        <span>P 5.00</span>
-                    </div>
-                    <div class="summary-row total">
-                        <span>Total</span>
-                        <span>P 105.00</span>
-                    </div>
+                <div class="order-totals" id="checkout-totals">
+                    <!-- Totals will be displayed here -->
                 </div>
             </div>
 
         </main>
 
-        <!-- Bottom Footer Container -->
+        <!-- Bottom Footer -->
         <div class="checkout-bottom-footer">
+
             <div class="footer-info-row">
-                <span class="products-count">2 Products</span>
-                <span class="footer-total">Total: P 105.00</span>
+                <span class="products-count" id="products-count">0 Products</span>
+                <span class="footer-total" id="footer-total">Total: P 0.00</span>
             </div>
-            <button type="button" class="send-order-btn" onclick=" location.href='home.html'">
+
+            <button type="button" class="send-order-btn" id="send-order-btn">
                 Send Order
             </button>
+
         </div>
 
     </div>
-    <script src ="cordova.js"></script>
-    <script src ="js/index.js"></script>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/checkout.js"></script>
 </body>
 </html>

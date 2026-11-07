@@ -1359,3 +1359,180 @@ body, html {
     font-weight: 600;
     cursor: pointer;
 }
+
+.empty-cart,
+.error-message {
+    text-align: center;
+    width: 100%;
+    margin: 40px auto;
+}
+
+
+/* MY ORDERS PAGE */
+
+.my-order-card {
+    background: white;
+    border-radius: 15px;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+}
+
+.my-order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.my-order-header h3 {
+    font-size: 16px;
+    margin: 0;
+    color: #333;
+}
+
+.order-status-badge {
+    background: #f3e5f5;
+    color: #6a1b9a;
+    padding: 6px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.my-order-id {
+    color: #888;
+    font-size: 12px;
+    margin: 10px 0;
+}
+
+.my-order-items {
+    color: #555;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.my-order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 12px;
+    color: #6a1b9a;
+    font-size: 13px;
+}
+
+.my-order-footer strong {
+    font-size: 15px;
+}
+
+.orders-message {
+    text-align: center;
+    width: 100%;
+    margin: 40px auto;
+    color: #777;
+}
+
+/* VENDOR DASHBOARD DROPDOWN */
+
+.vendor-menu-wrapper {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.vendor-dropdown {
+    display: none;
+    position: absolute;
+    top: 45px;
+    left: 0;
+    min-width: 150px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.vendor-dropdown.show {
+    display: block;
+}
+
+.vendor-dropdown button {
+    width: 100%;
+    padding: 12px 15px;
+    border: none;
+    background: white;
+    color: #333;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.vendor-dropdown button i {
+    margin-right: 8px;
+    color: #6a1b9a;
+}
+
+.vendor-dropdown button:hover {
+    background: #f5f0fa;
+}
+
+/* VENDOR DASHBOARD EMPTY STATE */
+
+.vendor-message {
+    text-align: center;
+    width: 100%;
+    margin: 40px auto;
+    color: #777;
+}
+
+/* Vendor order action buttons */
+.vendor-order-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.vendor-action-btn {
+    flex: 1;
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.accept-btn {
+    background: #6a1b9a;
+    color: white;
+}
+
+.reject-btn {
+    background: #fceaea;
+    color: #d32f2f;
+}
+
+.vendor-action-btn:active {
+    opacity: 0.8;
+}
+
+/* Logout Button */
+.logout-btn {
+    width: 100%;
+    padding: 14px;
+    margin-top: 20px;
+    background: #ffffff;
+    color: #d32f2f;
+    border: 1px solid #d32f2f;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.logout-btn i {
+    margin-right: 8px;
+}
