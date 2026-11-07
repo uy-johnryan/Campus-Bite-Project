@@ -1,25 +1,23 @@
-## Implemented Screens 
-Register/Login Screen
-![Register/Login Page](img/Screenshot_20261104_213323.png)
-
-Home/Food Stalls Screen
-![Home/Food Stalls](img/Screenshot_20261104_213339.png)
-
-Stall Menu Screen
-![Stall Menu](img/Screenshot_20261104_213350.png)
-
-Order Tab Screen
-![Order](img/Screenshot_20261104_213401.png)
-
-Checkout Screen
-![Checkout](img/Screenshot_20261104_213411.png)
-
-Track Order Screen 
-![Track](img/Screenshot_20261104_213422.png) 
-
-Vendor Dashboard 
-![Vendor Dashboard](img/Screenshot_20261104_214158.png)
-(temporarily accessed through register button for testing/demonstration purposes)
+## Demonstration Video of Some Core Functionalities in drive (still in progress)
+https://drive.google.com/file/d/1H9eKQTkk_SUszhAyEcea3F2B-SWbEdyM/view?usp=sharing
 
 ## Brief Progress Report
-Implemented the major screens of milestone 1, with still a need for refinement. There are still minor screens that will be worked on and logic with the screens. Problems encountered were with design but with the help of the web and use of online tools, we were able to resolve it, make it clear and understable the design to work with alongside the html files. 
+### Completed features.
+Applied some CRUD concepts regarding orders such as remove orders, add orders, subtract orders, checkout and their connection to Database. Used FLASK API to fetch data from a MySQL database (campusbite.sql) such as images and orders from tables.
+
+### Features currently being developed.
+Vendor Dashboard and its features
+Authentication of different users (vendors, students/faculty)
+(not a feature but fixing of image paths of food items in home.html)
+
+### Remaining features.
+Authentication of different users (vendors, students/faculty)
+Vendor Dashboard and its features (mark as no show, incoming orders - acceptance or rejection of orders)
+Favorites functionality
+addition of some stalls
+
+### Problems encountered.
+paths of images and stalls from database to the app
+
+### Solutions implemented.
+fixed paths in MySQL to display data
