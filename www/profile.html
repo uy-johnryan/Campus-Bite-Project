@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CampusBite - Profile</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="screen-container">
+
+        <!-- Top Navigation -->
+        <header class="page-header">
+            <button type="button" class="nav-btn back-btn" onclick="location.href='home.html'">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h2>My Profile</h2>
+        </header>
+
+        <!-- Profile Content -->
+        <main class="profile-content">
+
+            <div class="profile-card">
+
+                <div class="profile-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+
+                <h2>Student Name</h2>
+                <p class="profile-email">student@email.com</p>
+
+                <div class="profile-divider"></div>
+
+                <div class="profile-info">
+                    <div class="info-item">
+                        <i class="fa-regular fa-user"></i>
+                        <div>
+                            <span>Full Name</span>
+                            <p>Student Name</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-envelope"></i>
+                        <div>
+                            <span>Email Address</span>
+                            <p>student@email.com</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <div>
+                            <span>Account Type</span>
+                            <p>Student</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button type="button" class="nav-item active"
+                onclick="location.href='profile.html'">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </button>
+
+            <button type="button" class="nav-item"
+                onclick="location.href='favorite.html'">
+                <i class="fa-regular fa-heart"></i>
+                <span>Favorites</span>
+            </button>
+
+            <button type="button" class="nav-item"
+                onclick="location.href='track.html'">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Track</span>
+            </button>
+
+            <button type="button" class="nav-item"
+                onclick="location.href='order.html'">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Order</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

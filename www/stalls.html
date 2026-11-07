@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CampusBite - Home</title>
+    <link rel="stylesheet" href="css/index.css">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="screen-container">
+        <!-- Top Navigation Bar -->
+        <header class="top-nav">
+            <button type="button" class="nav-btn back-btn" onclick="history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <div class="nav-actions">
+                <!-- Home Button (Active State) -->
+                <button class="pill-btn" onclick="location.href='home.html'">Home</button>
+                <!-- Stalls Button -->
+                <button class="pill-btn active">Stalls</button>
+            </div>
+        </header>       
+
+        <!-- Food Grid -->
+        <main class="food-grid">
+            <!-- Card 1 -->
+            <div class="food-card green" onclick = "location.href='stall-menu.html'">    
+                <div class="image-wrapper">
+                    <img src="assets/img/ChickyFrydayLogo.jpg" alt="Chicky Fryday">
+                </div>
+                <div class="card-details">
+                    <div class="text-info">
+                        <h3>Chicky Fryday</h3>
+                    </div>
+                    <div class="rating">
+                        <i class="fa-solid fa-star"></i> <span>4.5</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Bottom Navigation Bar -->
+        <nav class="bottom-nav">
+            <button type="button" class="nav-item"
+                onclick="location.href='profile.html'">
+                <i class="fa-regular fa-user"></i>
+                <span>Profile</span>
+            </button>
+
+            <button type="button" class="nav-item"
+                onclick="location.href='favorite.html'">
+                <i class="fa-regular fa-heart"></i>
+                <span>Favorites</span>
+            </button>
+            <button type="button" class="nav-item" onclick="location.href='track.html'">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Track</span>
+            </button>
+            <button type="button" class="nav-item" onclick="location.href='order.html'">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Order</span>
+            </button>
+        </nav>
+    </div>
+    <script src ="cordova.js"></script>
+    <script src ="js/index.js"></script>
+</body>
+</html>

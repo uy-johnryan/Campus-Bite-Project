@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>CampusBite - Favorites</title>
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="screen-container">
+
+        <!-- Top Navigation -->
+        <header class="page-header">
+            <button type="button" class="nav-btn back-btn" onclick="location.href='home.html'">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+            <h2>My Favorites</h2>
+        </header>
+
+        <!-- Favorites Content -->
+        <main class="favorite-content">
+
+            <div class="empty-favorites">
+                <div class="empty-favorite-icon">
+                    <i class="fa-regular fa-heart"></i>
+                </div>
+
+                <h2>No Favorites Yet</h2>
+
+                <p>
+                    You haven't added any food items to your favorites.
+                    Browse the menu and tap the heart icon to save your favorites!
+                </p>
+
+                <button type="button" class="browse-btn"
+                    onclick="location.href='home.html'">
+                    Browse Food
+                </button>
+            </div>
+
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <button type="button" class="nav-item"
+                onclick="location.href='profile.html'">
+                <i class="fa-regular fa-user"></i>
+                <span>Profile</span>
+            </button>
+
+            <button type="button" class="nav-item active"
+                onclick="location.href='favorite.html'">
+                <i class="fa-solid fa-heart"></i>
+                <span>Favorites</span>
+            </button>
+
+            <button type="button" class="nav-item"
+                onclick="location.href='track.html'">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <span>Track</span>
+            </button>
+
+            <button type="button" class="nav-item"
+                onclick="location.href='order.html'">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Order</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
