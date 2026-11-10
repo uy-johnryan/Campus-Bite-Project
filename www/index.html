@@ -3,24 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CampusBite</title>
+    <title>CampusBite - Login</title>
     <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
     <div class="screen-container login-layout">
         <!-- Logo Section -->
         <div class="logo-container">
-            <!-- Replace 'logo.png' with your actual image source -->
             <img src="./assets/img/CampusBite_Logo.png" alt="CampusBite Logo" class="logo-image">
         </div>
 
-        <!-- Buttons Section -->
-        <div class="button-container">
-            <button class="btn login-btn" onclick="location.href='home.html'">Login</button>
-            <button class="btn register-btn" onclick="location.href='vendor-dashboard.html'">Register</button> <!-- TEMPORARY FOR VENDOR DASHBOARD, FOCUS IS ON STUDENT UI -->
-        </div>
+        <!-- Login Form Section -->
+        <form id="login-form" class="login-form-container">
+            <div class="input-group">
+                <label for="email">Email or Username</label>
+                <input type="text" id="email" name="email" required placeholder="Enter your email">
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <div id="error-message" class="error-text" style="color: red; display: none;"></div>
+
+            <div class="button-container">
+                <button type="submit" class="btn login-btn" id="login-submit-btn">Login</button>
+            </div>
+        </form>
     </div>
-    <script src ="cordova.js"></script>
-    <script src ="js/index.js"></script>
+
+    <script src="cordova.js"></script>
+    <script src="js/index.js"></script>
 </body>
 </html>
