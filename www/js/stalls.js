@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://127.0.0.1:5000";
+window.API_BASE_URL = window.API_BASE_URL || "http://127.0.0.1:5000";
 
 async function loadStalls() {
     const container = document.getElementById("stalls-container");
@@ -8,7 +8,7 @@ async function loadStalls() {
     container.innerHTML = "<p>Loading stalls...</p>";
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/stalls`);
+        const response = await fetch(`${window.API_BASE_URL}/api/stalls`);
         const data = await response.json();
 
         if (!response.ok || !data.success) {

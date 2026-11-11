@@ -1,6 +1,7 @@
 const API_BASE_URL = "http://127.0.0.1:5000";
 
 let allMenuItems = [];
+let favoriteItemIds = new Set();
 
 async function loadStallMenu() {
     const container = document.getElementById("menu-container");
@@ -33,6 +34,8 @@ async function loadStallMenu() {
         }
 
         allMenuItems = data.menu_items;
+        // Load the logged-in student's favorites
+        await loadFavoriteIds();
 
         // Retrieve the stall logo and details
         const stallsResponse = await fetch(`${API_BASE_URL}/api/stalls`);
@@ -78,6 +81,37 @@ async function loadStallMenu() {
 }
 
 
+
+async function loadFavoriteIds() {
+    const user = JSON.parse(localStorage.getItem("campusBiteUser"));
+
+    favoriteItemIds.clear();
+
+    if (!user || user.role !== "student") {
+        return;
+    }
+
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/api/users/${user.user_id}/favorites`
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Unable to load favorites.");
+        }
+
+        result.favorites.forEach(item => {
+            favoriteItemIds.add(Number(item.item_id));
+        });
+
+    } catch (error) {
+        console.error("Error loading favorites:", error);
+    }
+}
+
+
 // Display menu cards
 function displayMenuItems(items) {
     const container = document.getElementById("menu-container");
@@ -117,7 +151,18 @@ function displayMenuItems(items) {
         const favoriteButton = document.createElement("button");
         favoriteButton.className = "favorite-btn";
         favoriteButton.type = "button";
-        favoriteButton.innerHTML = '<i class="fa-regular fa-heart"></i>';
+
+        const isFavorite = favoriteItemIds.has(Number(item.item_id));
+
+        favoriteButton.innerHTML = isFavorite
+            ? '<i class="fa-solid fa-heart"></i>'
+            : '<i class="fa-regular fa-heart"></i>';
+
+        // Prevent clicking the heart from adding the item to the cart
+        favoriteButton.addEventListener("click", function (event) {
+            event.stopPropagation();
+            toggleFavorite(item, favoriteButton);
+        });
 
         imageWrapper.appendChild(image);
         imageWrapper.appendChild(favoriteButton);
@@ -167,6 +212,76 @@ function displayMenuItems(items) {
         container.appendChild(card);
     });
 }
+
+
+async function toggleFavorite(item, button) {
+    const user = JSON.parse(localStorage.getItem("campusBiteUser"));
+
+    if (!user || user.role !== "student") {
+        alert("Please log in using a student account.");
+        return;
+    }
+
+    const userId = user.user_id;
+    const itemId = Number(item.item_id);
+
+    const isFavorite = favoriteItemIds.has(itemId);
+
+    button.disabled = true;
+
+    try {
+        let response;
+
+        if (isFavorite) {
+            // Remove favorite
+            response = await fetch(
+                `${API_BASE_URL}/api/users/${userId}/favorites/${itemId}`,
+                {
+                    method: "DELETE"
+                }
+            );
+        } else {
+            // Add favorite
+            response = await fetch(
+                `${API_BASE_URL}/api/users/${userId}/favorites`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        item_id: itemId
+                    })
+                }
+            );
+        }
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Unable to update favorite.");
+        }
+
+        // Update the local favorite list
+        if (isFavorite) {
+            favoriteItemIds.delete(itemId);
+        } else {
+            favoriteItemIds.add(itemId);
+        }
+
+        // Update the heart icon
+        button.innerHTML = favoriteItemIds.has(itemId)
+            ? '<i class="fa-solid fa-heart"></i>'
+            : '<i class="fa-regular fa-heart"></i>';
+
+    } catch (error) {
+        console.error("Favorite error:", error);
+        alert(error.message);
+    } finally {
+        button.disabled = false;
+    }
+}
+
 
 function addToCart(item) {
     const CART_KEY = "campusBiteCart";

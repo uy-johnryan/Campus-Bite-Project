@@ -1,8 +1,17 @@
-const API_BASE_URL = "http://127.0.0.1:5000";
-const CUSTOMER_ID = 1;
+const API_BASE_URL = window.API_BASE_URL || "http://127.0.0.1:5000";
+
+const loggedInUser = JSON.parse(
+    localStorage.getItem("campusBiteUser")
+);
+
+const CUSTOMER_ID = loggedInUser ? loggedInUser.user_id : null;
 
 async function loadOrders() {
     const container = document.getElementById("orders-container");
+        if (!CUSTOMER_ID) {
+        window.location.href = "index.html";
+        return;
+    }
 
     try {
         const response = await fetch(

@@ -145,6 +145,47 @@ function renderOrderActions(order) {
 }
 
 
+// Update an order's status through the Flask API
+async function updateOrderStatus(orderId, newStatus, button) {
+    const originalText = button.textContent;
+
+    button.disabled = true;
+    button.textContent = "Updating...";
+
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/api/vendor/${VENDOR_ID}/orders/${orderId}/status`,
+            {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    status: newStatus
+                })
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Unable to update order.");
+        }
+
+        // Reload orders to display the updated status and buttons
+        await loadVendorOrders();
+
+    } catch (error) {
+        console.error("Order status update error:", error);
+
+        alert(error.message || "Something went wrong while updating the order.");
+
+        button.disabled = false;
+        button.textContent = originalText;
+    }
+}
+
+
 // Update the number displayed in each filter
 function updateFilterCounts() {
     const counts = {
@@ -281,6 +322,21 @@ function displayVendorOrders() {
 }
 
 
+// Handle vendor order action button clicks
+document.getElementById("vendor-orders-list").addEventListener("click", event => {
+    const button = event.target.closest(".vendor-action-btn");
+
+    if (!button) {
+        return;
+    }
+
+    const orderId = button.dataset.orderId;
+    const newStatus = button.dataset.newStatus;
+
+    updateOrderStatus(orderId, newStatus, button);
+});
+
+
 // Filter button events
 document.querySelectorAll(".filter-pill").forEach(button => {
     button.addEventListener("click", () => {
@@ -334,55 +390,8 @@ document.getElementById("logout-btn").addEventListener("click", () => {
     localStorage.removeItem("selectedOrderId");
 
     window.location.href = "index.html";
-
-
 });
 
-// Handle order action button clicks (Accept, Reject, Prepare, Ready, Complete)
-document.addEventListener("click", async event => {
-    if (!event.target.classList.contains("vendor-action-btn")) return;
-
-    const button = event.target;
-    const orderId = button.dataset.orderId;
-    const newStatus = button.dataset.newStatus;
-
-    if (!orderId || !newStatus) return;
-
-    // Optional: Confirmation for rejections or no shows
-    if (newStatus === "rejected" || newStatus === "no_show") {
-        const confirmAction = confirm(`Are you sure you want to mark this order as ${newStatus.replace('_', ' ')}?`);
-        if (!confirmAction) return;
-    }
-
-    button.disabled = true;
-    const originalText = button.textContent;
-    button.textContent = "Updating...";
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/api/vendor/orders/${orderId}/status`, {
-            method: "PATCH", // Change to "PUT" or "POST" if your backend route uses that instead
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ status: newStatus })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok || !data.success) {
-            throw new Error(data.message || "Failed to update order status.");
-        }
-
-        // Reload orders to reflect the updated status immediately
-        await loadVendorOrders();
-
-    } catch (error) {
-        console.error("Error updating order status:", error);
-        alert(error.message || "Could not update order status. Please try again.");
-        button.disabled = false;
-        button.textContent = originalText;
-    }
-});
 
 // Load orders when the page opens
 document.addEventListener("DOMContentLoaded", loadVendorOrders);

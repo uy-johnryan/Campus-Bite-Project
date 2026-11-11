@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
+from werkzeug.security import generate_password_hash
 from flask_cors import CORS
-from mysql.connector import Error
+from mysql.connector import Error   
 from database import get_db_connection
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 
@@ -757,6 +759,592 @@ def update_vendor_order_status(vendor_id, order_id):
         return jsonify({
             "success": False,
             "message": "Unable to update order status."
+        }), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection and connection.is_connected():
+            connection.close()
+
+
+# Vendor Login API
+@app.route("/api/vendor/login", methods=["POST"])
+def vendor_login():
+    connection = None
+    cursor = None
+
+    try:
+        data = request.get_json(silent=True)
+
+        if not data:
+            return jsonify({
+                "success": False,
+                "message": "Invalid request data."
+            }), 400
+
+        email = data.get("email", "").strip().lower()
+        password = data.get("password", "")
+
+        if not email or not password:
+            return jsonify({
+                "success": False,
+                "message": "Email and password are required."
+            }), 400
+
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                u.user_id,
+                u.username,
+                u.email,
+                u.password,
+                u.role,
+                u.stall_id,
+                s.stall_name
+            FROM users u
+            LEFT JOIN stalls s ON u.stall_id = s.stall_id
+            WHERE u.email = %s
+            AND u.role = 'vendor'
+        """, (email,))
+
+        vendor = cursor.fetchone()
+
+        # Verify vendor account and password
+        if not vendor or not vendor["password"]:
+            return jsonify({
+                "success": False,
+                "message": "Invalid email or password."
+            }), 401
+
+        if not check_password_hash(vendor["password"], password):
+            return jsonify({
+                "success": False,
+                "message": "Invalid email or password."
+            }), 401
+
+        if not vendor["stall_id"]:
+            return jsonify({
+                "success": False,
+                "message": "Your account has no assigned stall."
+            }), 403
+
+        return jsonify({
+            "success": True,
+            "message": "Vendor login successful!",
+            "vendor": {
+                "user_id": vendor["user_id"],
+                "username": vendor["username"],
+                "email": vendor["email"],
+                "stall_id": vendor["stall_id"],
+                "stall_name": vendor["stall_name"]
+            }
+        }), 200
+
+    except Error:
+        app.logger.exception("Vendor login failed.")
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to process vendor login."
+        }), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection and connection.is_connected():
+            connection.close()
+
+
+# Student Registration API
+@app.route("/api/register", methods=["POST"])
+def register_student():
+    connection = None
+    cursor = None
+
+    try:
+        data = request.get_json(silent=True)
+
+        if not isinstance(data, dict):
+            return jsonify({
+                "success": False,
+                "message": "Invalid request data."
+            }), 400
+
+        username = data.get("username")
+        email = data.get("email")
+        password = data.get("password")
+
+        # Validate input types
+        if not all(isinstance(value, str) for value in [username, email, password]):
+            return jsonify({
+                "success": False,
+                "message": "Please provide a valid name, email, and password."
+            }), 400
+
+        username = username.strip()
+        email = email.strip().lower()
+
+        # Validate required fields
+        if not username or not email or not password:
+            return jsonify({
+                "success": False,
+                "message": "All fields are required."
+            }), 400
+
+        if len(username) > 50:
+            return jsonify({
+                "success": False,
+                "message": "Name must not exceed 50 characters."
+            }), 400
+
+        # Allow only XU student email addresses
+        if email.count("@") != 1 or not email.endswith("@my.xu.edu.ph"):
+            return jsonify({
+                "success": False,
+                "message": "Only @my.xu.edu.ph email addresses are allowed."
+            }), 403
+
+        # Require a minimum password length
+        if len(password) < 8:
+            return jsonify({
+                "success": False,
+                "message": "Password must be at least 8 characters."
+            }), 400
+
+        # Hash the password
+        hashed_password = generate_password_hash(password)
+
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Check whether the email is already registered
+        cursor.execute("""
+            SELECT user_id
+            FROM users
+            WHERE email = %s
+        """, (email,))
+
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            return jsonify({
+                "success": False,
+                "message": "This email is already registered."
+            }), 409
+
+        # Insert the new student account
+        cursor.execute("""
+            INSERT INTO users (
+                username,
+                email,
+                password,
+                role
+            )
+            VALUES (%s, %s, %s, 'student')
+        """, (username, email, hashed_password))
+
+        user_id = cursor.lastrowid
+
+        connection.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Student registration successful!",
+            "user": {
+                "user_id": user_id,
+                "username": username,
+                "email": email,
+                "role": "student"
+            }
+        }), 201
+
+    except Error:
+        if connection and connection.is_connected():
+            connection.rollback()
+
+        app.logger.exception("Student registration failed.")
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to register. Please try again."
+        }), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection and connection.is_connected():
+            connection.close()
+
+
+
+# Shared Student and Vendor Login API
+@app.route("/api/login", methods=["POST"])
+def login():
+    connection = None
+    cursor = None
+
+    try:
+        data = request.get_json(silent=True)
+
+        if not isinstance(data, dict):
+            return jsonify({
+                "success": False,
+                "message": "Invalid request data."
+            }), 400
+
+        email = data.get("email")
+        password = data.get("password")
+
+        if not isinstance(email, str) or not isinstance(password, str):
+            return jsonify({
+                "success": False,
+                "message": "Please provide a valid email and password."
+            }), 400
+
+        email = email.strip().lower()
+
+        if not email or not password:
+            return jsonify({
+                "success": False,
+                "message": "Email and password are required."
+            }), 400
+
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT
+                u.user_id,
+                u.username,
+                u.email,
+                u.password,
+                u.role,
+                u.stall_id,
+                s.stall_name
+            FROM users u
+            LEFT JOIN stalls s ON u.stall_id = s.stall_id
+            WHERE u.email = %s
+        """, (email,))
+
+        user = cursor.fetchone()
+
+        # Check account and password
+        if not user or not user["password"]:
+            return jsonify({
+                "success": False,
+                "message": "Invalid email or password."
+            }), 401
+
+        if not check_password_hash(user["password"], password):
+            return jsonify({
+                "success": False,
+                "message": "Invalid email or password."
+            }), 401
+
+        # Student account
+        if user["role"] == "student":
+
+            if not email.endswith("@my.xu.edu.ph"):
+                return jsonify({
+                    "success": False,
+                    "message": "Only XU student accounts are allowed."
+                }), 403
+
+            destination = "home.html"
+
+        # Vendor account
+        elif user["role"] == "vendor":
+
+            if not user["stall_id"]:
+                return jsonify({
+                    "success": False,
+                    "message": "Your vendor account has no assigned stall."
+                }), 403
+
+            destination = "vendor-dashboard.html"
+
+        else:
+            return jsonify({
+                "success": False,
+                "message": "This account type is not supported."
+            }), 403
+
+        return jsonify({
+            "success": True,
+            "message": "Login successful!",
+            "destination": destination,
+            "user": {
+                "user_id": user["user_id"],
+                "username": user["username"],
+                "email": user["email"],
+                "role": user["role"],
+                "stall_id": user["stall_id"],
+                "stall_name": user["stall_name"]
+            }
+        }), 200
+
+    except Error:
+        app.logger.exception("Login failed.")
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to process login. Please try again."
+        }), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection and connection.is_connected():
+            connection.close()
+
+
+# ==========================================
+# FAVORITES API
+# ==========================================
+
+# Get all favorites belonging to a user
+@app.route("/api/users/<int:user_id>/favorites", methods=["GET"])
+def get_user_favorites(user_id):
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Verify that the user is a student
+        cursor.execute("""
+            SELECT user_id
+            FROM users
+            WHERE user_id = %s
+            AND role = 'student'
+        """, (user_id,))
+
+        user = cursor.fetchone()
+
+        if not user:
+            return jsonify({
+                "success": False,
+                "message": "Student account not found."
+            }), 404
+
+        # Retrieve the user's favorite menu items
+        cursor.execute("""
+            SELECT
+                f.favorite_id,
+                m.item_id,
+                m.stall_id,
+                m.item_name,
+                m.description,
+                m.price,
+                m.image,
+                m.category,
+                m.availability,
+                s.stall_name
+            FROM favorites f
+            JOIN menu_items m ON f.item_id = m.item_id
+            JOIN stalls s ON m.stall_id = s.stall_id
+            WHERE f.user_id = %s
+            ORDER BY f.created_at DESC
+        """, (user_id,))
+
+        favorites = cursor.fetchall()
+
+        for item in favorites:
+            item["price"] = float(item["price"])
+            item["availability"] = bool(item["availability"])
+
+        return jsonify({
+            "success": True,
+            "favorites": favorites
+        }), 200
+
+    except Error:
+        app.logger.exception("Failed to retrieve favorites.")
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to retrieve favorites."
+        }), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection and connection.is_connected():
+            connection.close()
+
+
+# Add a menu item to favorites
+@app.route("/api/users/<int:user_id>/favorites", methods=["POST"])
+def add_favorite(user_id):
+    connection = None
+    cursor = None
+
+    try:
+        data = request.get_json(silent=True)
+
+        if not isinstance(data, dict):
+            return jsonify({
+                "success": False,
+                "message": "Invalid request data."
+            }), 400
+
+        item_id = data.get("item_id")
+
+        if not isinstance(item_id, int) or item_id <= 0:
+            return jsonify({
+                "success": False,
+                "message": "A valid menu item ID is required."
+            }), 400
+
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Verify that the user is a student
+        cursor.execute("""
+            SELECT user_id
+            FROM users
+            WHERE user_id = %s
+            AND role = 'student'
+        """, (user_id,))
+
+        user = cursor.fetchone()
+
+        if not user:
+            return jsonify({
+                "success": False,
+                "message": "Student account not found."
+            }), 404
+
+        # Verify that the menu item exists
+        cursor.execute("""
+            SELECT item_id
+            FROM menu_items
+            WHERE item_id = %s
+        """, (item_id,))
+
+        menu_item = cursor.fetchone()
+
+        if not menu_item:
+            return jsonify({
+                "success": False,
+                "message": "Menu item not found."
+            }), 404
+
+        # Check whether the item is already a favorite
+        cursor.execute("""
+            SELECT favorite_id
+            FROM favorites
+            WHERE user_id = %s
+            AND item_id = %s
+        """, (user_id, item_id))
+
+        existing_favorite = cursor.fetchone()
+
+        if existing_favorite:
+            return jsonify({
+                "success": True,
+                "message": "This item is already in your favorites."
+            }), 200
+
+        # Save the favorite
+        cursor.execute("""
+            INSERT INTO favorites (user_id, item_id)
+            VALUES (%s, %s)
+        """, (user_id, item_id))
+
+        connection.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Item added to favorites!"
+        }), 201
+
+    except Error:
+        if connection and connection.is_connected():
+            connection.rollback()
+
+        app.logger.exception("Failed to add favorite.")
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to add favorite."
+        }), 500
+
+    finally:
+        if cursor:
+            cursor.close()
+
+        if connection and connection.is_connected():
+            connection.close()
+
+
+# Remove a menu item from favorites
+@app.route(
+    "/api/users/<int:user_id>/favorites/<int:item_id>",
+    methods=["DELETE"]
+)
+def remove_favorite(user_id, item_id):
+    connection = None
+    cursor = None
+
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+
+        # Verify that the user is a student
+        cursor.execute("""
+            SELECT user_id
+            FROM users
+            WHERE user_id = %s
+            AND role = 'student'
+        """, (user_id,))
+
+        user = cursor.fetchone()
+
+        if not user:
+            return jsonify({
+                "success": False,
+                "message": "Student account not found."
+            }), 404
+
+        # Delete only the selected user's favorite
+        cursor.execute("""
+            DELETE FROM favorites
+            WHERE user_id = %s
+            AND item_id = %s
+        """, (user_id, item_id))
+
+        if cursor.rowcount == 0:
+            return jsonify({
+                "success": False,
+                "message": "Favorite item not found."
+            }), 404
+
+        connection.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Item removed from favorites."
+        }), 200
+
+    except Error:
+        if connection and connection.is_connected():
+            connection.rollback()
+
+        app.logger.exception("Failed to remove favorite.")
+
+        return jsonify({
+            "success": False,
+            "message": "Unable to remove favorite."
         }), 500
 
     finally:

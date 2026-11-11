@@ -1,8 +1,12 @@
 const CART_KEY = "campusBiteCart";
 const SERVICE_FEE = 5;
 
-const API_BASE_URL = "http://127.0.0.1:5000";
-const TEMP_CUSTOMER_ID = 1;
+const API_BASE_URL = window.API_BASE_URL || "http://127.0.0.1:5000";
+const loggedInUser = JSON.parse(
+    localStorage.getItem("campusBiteUser")
+);
+
+const CUSTOMER_ID = loggedInUser ? loggedInUser.user_id : null;
 
 let selectedPayment = "cash";
 
@@ -121,6 +125,11 @@ document.querySelectorAll(".payment-option").forEach(option => {
 document.getElementById("send-order-btn").addEventListener("click", async () => {
 
     const cart = getCart();
+        if (!CUSTOMER_ID) {
+        alert("Please log in before placing an order.");
+        window.location.href = "index.html";
+        return;
+    }
     const sendOrderButton = document.getElementById("send-order-btn");
 
     if (cart.length === 0) {
@@ -139,7 +148,7 @@ document.getElementById("send-order-btn").addEventListener("click", async () => 
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                customer_id: TEMP_CUSTOMER_ID,
+                customer_id: CUSTOMER_ID,
                 payment_method: selectedPayment,
                 items: cart.map(item => ({
                     item_id: Number(item.item_id),

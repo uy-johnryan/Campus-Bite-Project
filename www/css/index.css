@@ -1536,3 +1536,215 @@ body, html {
 .logout-btn i {
     margin-right: 8px;
 }
+
+/* Student order tracking status colors */
+#status-banner.status-pending {
+    background-color: #fff3cd;
+}
+
+#status-banner.status-accepted {
+    background-color: #dbeafe;
+}
+
+#status-banner.status-preparing {
+    background-color: #ffedd5;
+}
+
+#status-banner.status-ready {
+    background-color: #dcfce7;
+}
+
+#status-banner.status-completed {
+    background-color: #d1fae5;
+}
+
+#status-banner.status-rejected,
+#status-banner.status-cancelled,
+#status-banner.status-no-show {
+    background-color: #fee2e2;
+}
+
+/* ==========================================
+   CAMPUSBITE AUTHENTICATION
+   ========================================== */
+
+.auth-options {
+    width: 85%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #2d1e5f;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #2d1e5f;
+}
+
+.google-login-btn {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+.vendor-login-btn {
+    background-color: #6a5acd;
+    color: #ffffff;
+}
+
+.auth-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #2d1e5f;
+}
+
+/* Vendor Login Form */
+
+.vendor-login-form {
+    width: 85%;
+    max-width: 300px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.vendor-login-form.active {
+    display: flex;
+}
+
+.vendor-login-form h2 {
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1.5px solid #888888;
+    border-radius: 12px;
+    font-size: 14px;
+    background-color: #ffffff;
+}
+
+.auth-back-btn {
+    background: transparent;
+    border: none;
+    color: #5635e8;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.auth-message {
+    text-align: center;
+    font-size: 13px;
+    color: #d32f2f;
+}
+
+
+/* Authentication Forms */
+.auth-switch {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 10px;
+    color: #555555;
+}
+
+.auth-switch a {
+    color: #5635e8;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-switch a:active {
+    opacity: 0.7;
+}
+
+/* Form visibility */
+
+#login-form,
+#register-form {
+    display: none;
+}
+
+#login-form.active,
+#register-form.active {
+    display: flex;
+}
+
+/* Favorites Page */
+.favorites-loading {
+    text-align: center;
+    padding: 30px 15px;
+    color: #777;
+}
+
+.favorites-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.favorite-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.favorite-image {
+    width: 85px;
+    height: 85px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.favorite-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.favorite-details h3 {
+    margin: 0 0 5px;
+    font-size: 15px;
+}
+
+.favorite-stall {
+    margin: 0 0 5px;
+    font-size: 12px;
+    color: #777;
+}
+
+.favorite-price {
+    margin: 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #5635e8;
+}
+
+.remove-favorite-btn {
+    border: none;
+    background: transparent;
+    color: #e53955;
+    font-size: 20px;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.remove-favorite-btn:disabled {
+    opacity: 0.5;
+}

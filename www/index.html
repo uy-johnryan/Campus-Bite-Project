@@ -3,36 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CampusBite - Login</title>
+    <title>CampusBite</title>
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="screen-container login-layout">
-        <!-- Logo Section -->
+
+        <!-- CampusBite Logo -->
         <div class="logo-container">
-            <img src="./assets/img/CampusBite_Logo.png" alt="CampusBite Logo" class="logo-image">
+            <img src="./assets/img/CampusBite_Logo.png"
+                 alt="CampusBite Logo"
+                 class="logo-image">
         </div>
 
-        <!-- Login Form Section -->
-        <form id="login-form" class="login-form-container">
-            <div class="input-group">
-                <label for="email">Email or Username</label>
-                <input type="text" id="email" name="email" required placeholder="Enter your email">
-            </div>
+        <!-- Login Form -->
+        <form class="vendor-login-form active" id="login-form">
 
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required placeholder="Enter your password">
-            </div>
+            <h2>Welcome Back!</h2>
 
-            <div id="error-message" class="error-text" style="color: red; display: none;"></div>
+            <input
+                type="email"
+                id="login-email"
+                class="auth-input"
+                placeholder="Email Address"
+                autocomplete="username"
+                required
+            >
 
-            <div class="button-container">
-                <button type="submit" class="btn login-btn" id="login-submit-btn">Login</button>
-            </div>
+            <input
+                type="password"
+                id="login-password"
+                class="auth-input"
+                placeholder="Password"
+                autocomplete="current-password"
+                required
+            >
+
+            <p class="auth-message" id="login-message"></p>
+
+            <button type="submit" class="auth-btn vendor-login-btn">
+                Login
+            </button>
+
+            <p class="auth-switch">
+                Don't have an account?
+                <a href="#" id="show-register">Register</a>
+            </p>
+
         </form>
-    </div>
 
+        <!-- Student Registration Form -->
+        <form class="vendor-login-form" id="register-form">
+
+            <h2>Student Registration</h2>
+
+            <input
+                type="text"
+                id="register-username"
+                class="auth-input"
+                placeholder="Full Name"
+                maxlength="50"
+                autocomplete="name"
+                required
+            >
+
+            <input
+                type="email"
+                id="register-email"
+                class="auth-input"
+                placeholder="XU Student Email"
+                autocomplete="email"
+                required
+            >
+
+            <input
+                type="password"
+                id="register-password"
+                class="auth-input"
+                placeholder="Password (minimum 8 characters)"
+                minlength="8"
+                autocomplete="new-password"
+                required
+            >
+
+            <p class="auth-message" id="register-message"></p>
+
+            <button type="submit" class="auth-btn vendor-login-btn">
+                Create Account
+            </button>
+
+            <p class="auth-switch">
+                Already have an account?
+                <a href="#" id="show-login">Login</a>
+            </p>
+
+        </form>
+
+    </div>
     <script src="cordova.js"></script>
     <script src="js/index.js"></script>
 </body>

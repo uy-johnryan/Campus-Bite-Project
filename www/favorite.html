@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,26 +19,8 @@
         </header>
 
         <!-- Favorites Content -->
-        <main class="favorite-content">
-
-            <div class="empty-favorites">
-                <div class="empty-favorite-icon">
-                    <i class="fa-regular fa-heart"></i>
-                </div>
-
-                <h2>No Favorites Yet</h2>
-
-                <p>
-                    You haven't added any food items to your favorites.
-                    Browse the menu and tap the heart icon to save your favorites!
-                </p>
-
-                <button type="button" class="browse-btn"
-                    onclick="location.href='home.html'">
-                    Browse Food
-                </button>
-            </div>
-
+        <main class="favorite-content" id="favorite-content">
+            <p class="favorites-loading">Loading your favorites...</p>
         </main>
 
         <!-- Bottom Navigation Bar -->
@@ -67,6 +48,6 @@
     </div>
 
     <script src="cordova.js"></script>
-    <script src="js/index.js"></script>
+    <script src="js/favorite.js"></script>
 </body>
 </html>

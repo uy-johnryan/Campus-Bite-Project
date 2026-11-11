@@ -1,29 +1,122 @@
-/**
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+document.addEventListener("DOMContentLoaded", function () {
 
-        http://www.apache.org/licenses/LICENSE-2.0
+    // CampusBite API URL
+    window.API_BASE_URL = window.API_BASE_URL || "http://127.0.0.1:5000";
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
-*/
+    // Form elements
+    const loginForm = document.getElementById("login-form");
+    const registerForm = document.getElementById("register-form");
 
-// Wait for the deviceready event before using any of Cordova's device APIs.
-// See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
-document.addEventListener('deviceready', onDeviceReady, false);
+    const showRegister = document.getElementById("show-register");
+    const showLogin = document.getElementById("show-login");
 
-function onDeviceReady() {
-    // Cordova is now initialized. Have fun!
+    // Message elements
+    const loginMessage = document.getElementById("login-message");
+    const registerMessage = document.getElementById("register-message");
 
-    console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    document.getElementById('deviceready').classList.add('ready');
-}
+    // Switch to Registration Form
+    showRegister.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        loginForm.classList.remove("active");
+        registerForm.classList.add("active");
+
+        loginMessage.textContent = "";
+        registerMessage.textContent = "";
+    });
+
+    // Switch to Login Form
+    showLogin.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        registerForm.classList.remove("active");
+        loginForm.classList.add("active");
+
+        loginMessage.textContent = "";
+        registerMessage.textContent = "";
+    });
+
+    // Student and Vendor Login
+    loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const email = document.getElementById("login-email").value.trim();
+        const password = document.getElementById("login-password").value;
+
+        loginMessage.style.color = "#d32f2f";
+        loginMessage.textContent = "Logging in...";
+
+        try {
+            const response = await fetch(`${window.API_BASE_URL}/api/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                loginMessage.textContent = result.message || "Login failed.";
+                return;
+            }
+
+            localStorage.setItem("campusBiteUser", JSON.stringify(result.user));
+
+            window.location.href = result.destination;
+
+        } catch (error) {
+            console.error("Login error:", error);
+            loginMessage.textContent = "Unable to connect to the server.";
+        }
+    });
+
+    // Student Registration
+    registerForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const username = document.getElementById("register-username").value.trim();
+        const email = document.getElementById("register-email").value.trim();
+        const password = document.getElementById("register-password").value;
+
+        registerMessage.style.color = "#d32f2f";
+        registerMessage.textContent = "Creating account...";
+
+        try {
+            const response = await fetch(`${window.API_BASE_URL}/api/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                registerMessage.textContent = result.message || "Registration failed.";
+                return;
+            }
+
+            registerMessage.style.color = "green";
+            registerMessage.textContent = "Registration successful! You can now log in.";
+
+            registerForm.reset();
+
+            setTimeout(() => {
+                registerForm.classList.remove("active");
+                loginForm.classList.add("active");
+
+                document.getElementById("login-email").value = email;
+
+                registerMessage.textContent = "";
+            }, 1500);
+
+        } catch (error) {
+            console.error("Registration error:", error);
+            registerMessage.textContent = "Unable to connect to the server.";
+        }
+    });
+
+});

@@ -1,5 +1,14 @@
-const API_BASE_URL = "http://127.0.0.1:5000";
-const CUSTOMER_ID = 1;
+const API_BASE_URL = window.API_BASE_URL || "http://127.0.0.1:5000";
+
+const loggedInUser = JSON.parse(
+    localStorage.getItem("campusBiteUser")
+);
+
+const CUSTOMER_ID = loggedInUser ? loggedInUser.user_id : null;
+
+let isLoadingOrder = false;
+let lastDisplayedStatus = null;
+let orderStatusPolling = null;
 
 function escapeHTML(value) {
     return String(value ?? "").replace(/[&<>"']/g, character => ({
@@ -11,8 +20,13 @@ function escapeHTML(value) {
     })[character]);
 }
 
-async function loadOrderDetails() {
+
+async function loadOrderDetails(silent = false) {
     const orderId = localStorage.getItem("selectedOrderId");
+        if (!CUSTOMER_ID) {
+        window.location.href = "index.html";
+        return;
+    }
 
     const stallHeader = document.getElementById("stall-header-tag");
     const statusMain = document.getElementById("status-main");
@@ -24,10 +38,16 @@ async function loadOrderDetails() {
         statusMain.textContent = "No Order Selected";
         statusSub.textContent = "Please select an order from My Orders.";
         timelineContainer.innerHTML = "";
-        detailsContainer.innerHTML =
-            "<p>No order was selected.</p>";
+        detailsContainer.innerHTML = "<p>No order was selected.</p>";
         return;
     }
+
+    // Prevent overlapping API requests
+    if (isLoadingOrder) {
+        return;
+    }
+
+    isLoadingOrder = true;
 
     try {
         const response = await fetch(
@@ -41,24 +61,50 @@ async function loadOrderDetails() {
         }
 
         const order = data.order;
+        const currentStatus = order.order_status.toLowerCase();
 
-        displayOrderStatus(order);
-        displayOrderTimeline(order.order_status);
-        displayOrderDetails(order);
+        // Update the display only when the status changes
+        if (lastDisplayedStatus !== currentStatus) {
+            displayOrderStatus(order);
+            displayOrderTimeline(currentStatus);
+            displayOrderDetails(order);
+
+            lastDisplayedStatus = currentStatus;
+        }
 
         stallHeader.textContent = `Stall ${order.stall_id}`;
+
+        // Stop polling once the order reaches a final status
+        const finalStatuses = [
+            "completed",
+            "rejected",
+            "cancelled",
+            "no_show"
+        ];
+
+        if (finalStatuses.includes(currentStatus)) {
+            clearInterval(orderStatusPolling);
+            orderStatusPolling = null;
+        }
 
     } catch (error) {
         console.error("Error loading order:", error);
 
-        statusMain.textContent = "Unable to Load Order";
-        statusSub.textContent = "Please try again later.";
+        // Only show an error message during the initial load.
+        // Temporary polling errors won't replace the existing order details.
+        if (!silent && lastDisplayedStatus === null) {
+            statusMain.textContent = "Unable to Load Order";
+            statusSub.textContent = "Please try again later.";
 
-        timelineContainer.innerHTML =
-            "<p>Unable to load order timeline.</p>";
+            timelineContainer.innerHTML =
+                "<p>Unable to load order timeline.</p>";
 
-        detailsContainer.innerHTML =
-            "<p>Unable to load order details.</p>";
+            detailsContainer.innerHTML =
+                "<p>Unable to load order details.</p>";
+        }
+
+    } finally {
+        isLoadingOrder = false;
     }
 }
 
@@ -67,8 +113,9 @@ async function loadOrderDetails() {
 function displayOrderStatus(order) {
     const statusMain = document.getElementById("status-main");
     const statusSub = document.getElementById("status-sub");
+    const statusBanner = document.getElementById("status-banner");
 
-    const status = order.order_status;
+    const status = order.order_status.toLowerCase();
 
     const statusMessages = {
         pending: {
@@ -109,6 +156,20 @@ function displayOrderStatus(order) {
         title: "Unknown Status",
         description: "Please contact the stall for assistance."
     };
+
+    // Change the existing status banner background
+    statusBanner.classList.remove(
+        "status-pending",
+        "status-accepted",
+        "status-preparing",
+        "status-ready",
+        "status-completed",
+        "status-rejected",
+        "status-cancelled",
+        "status-no-show"
+    );
+
+    statusBanner.classList.add(`status-${status.replace("_", "-")}`);
 
     statusMain.textContent = currentStatus.title;
     statusSub.textContent = currentStatus.description;
@@ -244,4 +305,14 @@ function displayOrderDetails(order) {
     `;
 }
 
-document.addEventListener("DOMContentLoaded", loadOrderDetails);
+document.addEventListener("DOMContentLoaded", () => {
+
+    // Load order details immediately
+    loadOrderDetails();
+
+    // Automatic checking of status updates every 5 seconds
+    orderStatusPolling = setInterval(() => {
+        loadOrderDetails(true);
+    }, 5000);
+
+});
