@@ -135,4 +135,4 @@ To build the Android application:
 cordova build android
 ```
 
-**Important:** The frontend API URL must point to the computer running Flask. When testing on a physical Android device, `127.0.0.1` refers to the device itself, not your computer. Update the API base URL to your computer's local network IP address and make sure both devices are connected to the same network. 
+**Important:** The frontend API URL must point to the computer running Flask. When testing on a physical Android device, `127.0.0.1` refers to the device itself, not your computer. Update the API base URL to your computer's local network IP address (ex. const API_BASE_URL = "http://192.168.1.5:5000";) and make sure both devices are connected to the same network. 
