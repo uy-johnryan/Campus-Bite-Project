@@ -121,25 +121,67 @@ document.querySelectorAll(".payment-option").forEach(option => {
 });
 
 
-// Send order to Flask API
-document.getElementById("send-order-btn").addEventListener("click", async () => {
+// Policy Disclosure 
+const policyOverlay = document.getElementById("policy-overlay");
+const policyCheckbox = document.getElementById("policy-agreement");
+const agreePolicyButton = document.getElementById("agree-policy-btn");
+const cancelPolicyButton = document.getElementById("cancel-policy-btn");
 
+const sendOrderButton = document.getElementById("send-order-btn");
+
+// Show policy popup when checkout is clicked
+sendOrderButton.addEventListener("click", () => {
     const cart = getCart();
-        if (!CUSTOMER_ID) {
+
+    if (!CUSTOMER_ID) {
         alert("Please log in before placing an order.");
         window.location.href = "index.html";
         return;
     }
-    const sendOrderButton = document.getElementById("send-order-btn");
 
     if (cart.length === 0) {
         alert("Your cart is empty.");
         return;
     }
 
-    // Prevent multiple submissions
+    policyCheckbox.checked = false;
+    agreePolicyButton.disabled = true;
+
+    policyOverlay.classList.add("active");
+});
+
+// Enable agreement button only when checkbox is checked
+policyCheckbox.addEventListener("change", () => {
+    agreePolicyButton.disabled = !policyCheckbox.checked;
+});
+
+// Close popup
+cancelPolicyButton.addEventListener("click", () => {
+    policyOverlay.classList.remove("active");
+});
+
+// Submit order after agreement
+agreePolicyButton.addEventListener("click", submitOrder);
+
+
+// Send order to Flask API
+async function submitOrder() {
+
+    if (!policyCheckbox.checked) {
+        return;
+    }
+
+    const cart = getCart();
+
+    if (cart.length === 0) {
+        alert("Your cart is empty.");
+        policyOverlay.classList.remove("active");
+        return;
+    }
+
     sendOrderButton.disabled = true;
-    sendOrderButton.textContent = "Sending Order...";
+    agreePolicyButton.disabled = true;
+    agreePolicyButton.textContent = "Sending Order...";
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/orders`, {
@@ -164,18 +206,15 @@ document.getElementById("send-order-btn").addEventListener("click", async () => 
             throw new Error(data.message || "Failed to submit order.");
         }
 
-        // Get generated order IDs
         const orderIds = data.orders
             .map(order => order.order_id)
             .join(", ");
 
-        // Save submitted order information
         localStorage.setItem(
             "campusBiteLastOrder",
             JSON.stringify(data.orders)
         );
 
-        // Clear cart after successful submission
         localStorage.removeItem(CART_KEY);
         localStorage.removeItem("campusBitePendingOrder");
 
@@ -185,7 +224,6 @@ document.getElementById("send-order-btn").addEventListener("click", async () => 
             "Payment Method: " + selectedPayment.toUpperCase()
         );
 
-        // Return to home page
         window.location.href = "home.html";
 
     } catch (error) {
@@ -197,10 +235,10 @@ document.getElementById("send-order-btn").addEventListener("click", async () => 
         );
 
         sendOrderButton.disabled = false;
-        sendOrderButton.textContent = "Send Order";
+        agreePolicyButton.disabled = !policyCheckbox.checked;
+        agreePolicyButton.textContent = "Agree & Submit Order";
     }
-
-});
+}
 
 
 // Load checkout page

@@ -1748,3 +1748,114 @@ body, html {
 .remove-favorite-btn:disabled {
     opacity: 0.5;
 }
+
+/* Policy Disclosure Popup */
+.policy-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.policy-overlay.active {
+    display: flex;
+}
+
+.policy-modal {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 16px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.policy-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.policy-header i {
+    font-size: 30px;
+    color: #5635e8;
+}
+
+.policy-header h2 {
+    margin: 10px 0 5px;
+    font-size: 21px;
+}
+
+.policy-header p {
+    font-size: 13px;
+    color: #777;
+}
+
+.policy-body h3 {
+    font-size: 15px;
+    margin: 15px 0 5px;
+    color: #333;
+}
+
+.policy-body p {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #666;
+    margin: 0;
+}
+
+.policy-agreement {
+    margin-top: 20px;
+    padding: 12px;
+    background: #f5f3ff;
+    border-radius: 10px;
+    font-size: 13px;
+}
+
+.policy-agreement label {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.policy-agreement input {
+    margin-top: 2px;
+    accent-color: #5635e8;
+}
+
+.policy-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.policy-buttons button {
+    padding: 13px;
+    border: none;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#cancel-policy-btn {
+    background: #eeeeee;
+    color: #333;
+}
+
+#agree-policy-btn {
+    background: #5635e8;
+    color: white;
+}
+
+#agree-policy-btn:disabled {
+    background: #b9b0e8;
+    cursor: not-allowed;
+}

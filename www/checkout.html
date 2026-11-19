@@ -75,6 +75,64 @@
 
     </div>
 
+        <!-- Policy Disclosure Popup -->
+    <div class="policy-overlay" id="policy-overlay">
+        <div class="policy-modal">
+
+            <div class="policy-header">
+                <i class="fa-solid fa-shield-halved"></i>
+                <h2>Policy Disclosure</h2>
+                <p>Please read before submitting your order.</p>
+            </div>
+
+            <div class="policy-body">
+
+                <h3>1. Pickup Policy</h3>
+                <p>
+                    Customers must collect their orders within the assigned
+                    pickup time shown in the order details.
+                </p>
+
+                <h3>2. Cancellation Policy</h3>
+                <p>
+                    Orders may be cancelled before the vendor accepts them.
+                    Once an order is accepted, cancellation is no longer allowed.
+                </p>
+
+                <h3>3. Refund Policy</h3>
+                <p>
+                    Refunds are not available once the vendor has accepted
+                    the order.
+                </p>
+
+                <h3>4. No-Show Policy</h3>
+                <p>
+                    Orders that are not collected within the assigned pickup
+                    window may be marked as No-Show by the vendor.
+                </p>
+
+            </div>
+
+            <div class="policy-agreement">
+                <label>
+                    <input type="checkbox" id="policy-agreement">
+                    I have read and agree to the policies above.
+                </label>
+            </div>
+
+            <div class="policy-buttons">
+                <button type="button" id="cancel-policy-btn">
+                    Cancel
+                </button>
+
+                <button type="button" id="agree-policy-btn" disabled>
+                    Agree & Submit Order
+                </button>
+            </div>
+
+        </div>
+    </div>
+
     <script src="cordova.js"></script>
     <script src="js/checkout.js"></script>
 </body>
