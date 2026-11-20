@@ -1,7 +1,11 @@
-## Updated working application.
+# CampusBite
+
+## Updated Working Application
+
 The updated CampusBite application includes the following functional features:
 
 ### Student and Faculty Features
+
 - **Login and Registration:** Users can log in using their registered accounts. Students and faculty can create accounts using an `@my.xu.edu.ph` email address.
 - **Input Validation:** Registration only accepts email addresses ending in `@my.xu.edu.ph`.
 - **Home Page:** Displays food items retrieved from the MySQL database, including their names, prices, images, and availability.
@@ -13,13 +17,39 @@ The updated CampusBite application includes the following functional features:
 - **Order Tracking:** Users can monitor their orders and view status updates from vendors.
 
 ### Vendor Features
+
 - **Vendor Login:** Vendors use specific accounts created directly in the MySQL database.
 - **Vendor Dashboard:** Displays orders assigned to the vendor's respective stall.
-- **Order Management:** Vendors can accept or reject incoming orders.
-- **Order Status Updates:** Vendors can update accepted orders to preparing and ready for pickup.
-- **Order Completion:** Vendors can mark orders as completed or no-show.
+- **Order Management:** Vendors can accept or reject incoming orders, update accepted orders to preparing, ready for pickup, and mark orders as completed or no-show after 30 minutes following the order being marked as ready for pickup.
+
+### Vendor Login Accounts
+
+The following test accounts are provided to access the CampusBite Vendor Dashboard.
+
+| Stall | Email | Password |
+|---|---|---|
+| Chicky Fryday | chickyvendor@campusbite.com | `chickyvendor` |
+| Gulaman District | gulamandistrictvendor@campusbite.com | `gulamandistrictvendor` |
+| Fresh&Up | fresh&upvendor@campusbite.com | `fresh&upvendor` |
+
+**Instructions:**
+
+1. Open the CampusBite application.
+2. Navigate to the login page.
+3. Enter one of the vendor email addresses and its corresponding password.
+4. Log in to access the assigned stall's Vendor Dashboard.
+
+Each vendor account is assigned to its respective stall. Vendors can only manage orders belonging to their assigned stall.
+
+**Important Note Regarding `vendor-dashboard.js`:**
+
+- The `vendor-dashboard.js` file retrieves this information and checks whether the logged-in user's role is `vendor`.
+- The vendor's `user_id` is used when retrieving and updating orders through the Flask API and  allows each vendor account to access and manage orders associated with its assigned stall.
+
+---
 
 ## Testing Documentation/Results
+
 The application was tested to verify that its main features work correctly and that information is properly retrieved from and stored in the MySQL database through the Flask API.
 
 | Feature Tested | Testing Performed | Expected Result | Status |
@@ -36,26 +66,11 @@ The application was tested to verify that its main features work correctly and t
 | Vendor Order Management | Accept, reject, update, and complete orders. | Order statuses are successfully updated. | Passed |
 | Order Tracking | Track an order using the student/faculty account. | The latest order status is displayed to the customer. | Passed |
 
-## List of identified issues/bugs 
-Profile page did not reflect current user and favorites page had no functionality and did not reflect favorite selected items. 
+---
 
-During authentication, logging in with student/faculty user did not reflect the stalls when selecting the stalls.html in the Flask API, Same with Vendor-dashboard.html.
+# FOR INSTALLATION AND SETUP
 
-## Actions taken to resolve the issues
-Updated the Profile and Favorites pages to display information based on the currently logged-in user.
-
-Fixed the Flask API connection to properly retrieve and display stalls when a student or faculty user logs in.
-
-Updated the Vendor Dashboard to display orders based on the logged-in vendor and their assigned stall.
-
-## Progress Report
-Each feature has been integrated such as the favorites functionality, Authentication --- Login/Register functionality, display of current user in profile page. Input Validation --- @my.xu.edu.ph users are allowed for registration. Vendors are an exception as they are given specific emails inside the sql database. Home screen food cards can also be added to order cart.
-
-As for vendors, vendors can accept and reject orders, mark it as no show, and mark it as complete and have it reflect on the student/faculty user's end when they look at track page when tracking orders. 
-
-
-## FOR INSTALLATION AND SETUP
-### Prerequisites
+## Prerequisites
 
 Before running CampusBite, make sure the following are installed:
 
@@ -66,52 +81,52 @@ Before running CampusBite, make sure the following are installed:
 - Node.js and npm
 - Android Studio and Android SDK (for Android builds)
 
-### Backend Setup
+## Backend Setup
 
 1. Open the project folder in your preferred code editor.
 2. Open a terminal and navigate to the backend directory:
 
-```bash
-cd backend
-```
+   ```bash
+   cd backend
+   ```
 
 3. Create a Python virtual environment if one does not already exist:
 
-```bash
-python -m venv venv
-```
+   ```bash
+   python -m venv venv
+   ```
 
 4. Activate the virtual environment on Windows:
 
-```bash
-venv\Scripts\activate
-```
+   ```bash
+   venv\Scripts\activate
+   ```
 
 5. Install the required Python packages:
 
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 6. Configure the database connection using a `.env` file inside the `backend` directory:
 
-```env
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_mysql_password
-DB_NAME=campusbite
-```
+   ```env
+   DB_HOST=localhost
+   DB_PORT=3306
+   DB_USER=root
+   DB_PASSWORD=your_mysql_password
+   DB_NAME=campusbite
+   ```
 
-Replace `your_mysql_password` with your local MySQL password.
+   Replace `your_mysql_password` with your local MySQL password.
 
 7. Make sure the `campusbite` database and the required tables are created in MySQL.
 
 8. Start the Flask backend:
 
-```bash
-python app.py
-```
+   ```bash
+   python app.py
+   ```
 
 The API should be accessible at:
 
@@ -119,15 +134,15 @@ The API should be accessible at:
 http://127.0.0.1:5000
 ```
 
-### Frontend Setup
+## Frontend Setup
 
 1. Open another terminal in the main CampusBite project directory.
 2. Make sure the Cordova project dependencies are installed.
 3. Run the application using Cordova:
 
-```bash
-cordova run android
-```
+   ```bash
+   cordova run android
+   ```
 
 To build the Android application:
 
@@ -135,4 +150,4 @@ To build the Android application:
 cordova build android
 ```
 
-**Important:** The frontend API URL must point to the computer running Flask. When testing on a physical Android device, `127.0.0.1` refers to the device itself, not your computer. Update the API base URL to your computer's local network IP address (ex. const API_BASE_URL = "http://192.168.1.5:5000";) and make sure both devices are connected to the same network. 
+**Important:** The frontend API URL must point to the computer running Flask. When testing on a physical Android device, `127.0.0.1` refers to the device itself, not your computer. Update the API base URL to your computer's local network IP address (e.g., `const API_BASE_URL = "http://192.168.1.5:5000";`) and make sure both devices are connected to the same network.
