@@ -1859,3 +1859,58 @@ body, html {
     background: #b9b0e8;
     cursor: not-allowed;
 }
+
+.pickup-countdown-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    padding: 18px;
+    background: #eaf7ee;
+    border: 1px solid #b9e2c5;
+    border-radius: 14px;
+}
+
+.pickup-countdown-card[hidden] {
+    display: none;
+}
+
+.pickup-countdown-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #d2efda;
+    color: #258044;
+    border-radius: 50%;
+    font-size: 21px;
+}
+
+.pickup-countdown-info {
+    flex: 1;
+}
+
+.pickup-countdown-title {
+    margin: 0 0 4px;
+    color: #276b3c;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.pickup-countdown-time {
+    margin: 0;
+    color: #176b35;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    font-variant-numeric: tabular-nums;
+}
+
+.pickup-countdown-note {
+    margin: 4px 0 0;
+    color: #52745b;
+    font-size: 12px;
+    line-height: 1.4;
+}

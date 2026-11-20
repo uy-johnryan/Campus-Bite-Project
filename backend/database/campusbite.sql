@@ -32,7 +32,7 @@ CREATE TABLE `favorites` (
   KEY `item_id` (`item_id`),
   CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `favorites_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `menu_items` (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -41,6 +41,7 @@ CREATE TABLE `favorites` (
 
 LOCK TABLES `favorites` WRITE;
 /*!40000 ALTER TABLE `favorites` DISABLE KEYS */;
+INSERT INTO `favorites` VALUES (10,4,2,'2026-11-11 13:56:19'),(17,3,2,'2026-11-11 14:10:05'),(18,3,1,'2026-11-11 14:10:18'),(21,3,4,'2026-11-11 14:17:51');
 /*!40000 ALTER TABLE `favorites` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -94,7 +95,7 @@ CREATE TABLE `order_items` (
   KEY `item_id` (`item_id`),
   CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`),
   CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`item_id`) REFERENCES `menu_items` (`item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,7 +104,7 @@ CREATE TABLE `order_items` (
 
 LOCK TABLES `order_items` WRITE;
 /*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
-INSERT INTO `order_items` VALUES (1,1,4,2,85.00),(2,2,1,1,15.00),(3,3,4,1,85.00),(4,4,4,1,85.00),(5,5,2,2,85.00),(6,5,1,2,15.00),(7,6,2,3,85.00),(8,6,1,2,15.00);
+INSERT INTO `order_items` VALUES (1,1,4,2,85.00),(2,2,1,1,15.00),(3,3,4,1,85.00),(4,4,4,1,85.00),(5,5,2,2,85.00),(6,5,1,2,15.00),(7,6,2,3,85.00),(8,6,1,2,15.00),(9,7,2,1,85.00),(10,7,1,1,15.00),(11,8,4,1,85.00),(12,8,2,1,85.00),(13,9,4,1,85.00),(14,9,3,1,90.00),(15,9,1,2,15.00),(16,10,1,2,15.00),(17,11,4,2,85.00),(18,11,1,1,15.00),(19,12,4,1,85.00),(20,12,3,1,90.00),(21,13,1,1,15.00),(22,14,1,1,15.00);
 /*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -124,12 +125,13 @@ CREATE TABLE `orders` (
   `order_status` enum('pending','accepted','preparing','ready','completed','rejected','cancelled','no_show') DEFAULT 'pending',
   `pickup_time` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `ready_at` datetime DEFAULT NULL,
   PRIMARY KEY (`order_id`),
   KEY `customer_id` (`customer_id`),
   KEY `stall_id` (`stall_id`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `users` (`user_id`),
   CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`stall_id`) REFERENCES `stalls` (`stall_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,7 +140,7 @@ CREATE TABLE `orders` (
 
 LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,1,1,175.00,'gcash','pending','pending',NULL,'2026-11-07 12:46:18'),(2,1,1,20.00,'cash','pending','pending',NULL,'2026-11-07 13:00:05'),(3,1,1,90.00,'cash','pending','pending',NULL,'2026-11-07 13:08:49'),(4,1,1,90.00,'cash','pending','pending',NULL,'2026-11-07 14:55:17'),(5,1,1,205.00,'cash','pending','pending',NULL,'2026-11-07 15:23:50'),(6,1,1,290.00,'cash','pending','pending',NULL,'2026-11-07 15:29:42');
+INSERT INTO `orders` VALUES (1,1,1,175.00,'gcash','pending','no_show',NULL,'2026-11-07 12:46:18',NULL),(2,1,1,20.00,'cash','pending','completed',NULL,'2026-11-07 13:00:05',NULL),(3,1,1,90.00,'cash','pending','no_show',NULL,'2026-11-07 13:08:49',NULL),(4,1,1,90.00,'cash','pending','completed',NULL,'2026-11-07 14:55:17',NULL),(5,1,1,205.00,'cash','pending','completed',NULL,'2026-11-07 15:23:50',NULL),(6,1,1,290.00,'cash','pending','no_show',NULL,'2026-11-07 15:29:42',NULL),(7,3,1,105.00,'cash','pending','completed',NULL,'2026-11-11 13:14:33',NULL),(8,4,1,175.00,'gcash','pending','pending',NULL,'2026-11-11 13:23:46',NULL),(9,4,1,210.00,'cash','pending','completed',NULL,'2026-11-11 13:24:04',NULL),(10,4,1,35.00,'cash','pending','pending',NULL,'2026-11-11 13:59:57',NULL),(11,3,1,190.00,'cash','pending','pending',NULL,'2026-11-11 14:18:08',NULL),(12,5,1,180.00,'cash','pending','pending',NULL,'2026-11-19 09:10:21',NULL),(13,5,1,20.00,'cash','pending','completed',NULL,'2026-11-19 09:10:33','2026-11-20 19:34:23'),(14,6,1,20.00,'cash','pending','ready',NULL,'2026-11-20 11:36:24','2026-11-20 19:37:10');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -195,7 +197,7 @@ CREATE TABLE `users` (
   UNIQUE KEY `google_id` (`google_id`),
   KEY `fk_users_stall` (`stall_id`),
   CONSTRAINT `fk_users_stall` FOREIGN KEY (`stall_id`) REFERENCES `stalls` (`stall_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -204,7 +206,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Test Student','teststudent@my.xu.edu.ph',NULL,'student','2026-11-07 12:37:15',NULL,NULL,NULL),(2,'Chicky Fryday Vendor','chickyvendor@campusbite.com','temporary_password','vendor','2026-11-07 13:27:47',NULL,NULL,1);
+INSERT INTO `users` VALUES (1,'Test Student','teststudent@my.xu.edu.ph',NULL,'student','2026-11-07 12:37:15',NULL,NULL,NULL),(2,'Chicky Fryday Vendor','chickyvendor@campusbite.com','scrypt:32768:8:1$J4YHBUcMdEU6nYbw$c714da034b55072686dbbfe7667344f19bade99de75e1ad4917434c4b62e780d03e0937fb1bc89f92cf027792a448ea3f59cb48fff2b6d3e929e713ecc5ddd4d','vendor','2026-11-07 13:27:47',NULL,NULL,1),(3,'Test Student','teststudent2@my.xu.edu.ph','scrypt:32768:8:1$QgSieSS8D2sX2lld$5b04d0a9a5502b91cc40b33c56a6332c0512c60f3e069b985a522d93fc10a02bb4c9a22c0143c5dfa6ba7041f9d9edcf540d83c308fb888ed3c2bcf457679dd0','student','2026-11-11 12:16:55',NULL,NULL,NULL),(4,'asd','john@my.xu.edu.ph','scrypt:32768:8:1$NT4d9oUs2i9kdlmV$b899a8d081992152b4c30e0af2623fea6b2744469ccd51cddfd2a07db7919e6449f38f163756656a69c5119d5923a1acbb3c75d10575d8ee4dfce999ce65074b','student','2026-11-11 13:23:22',NULL,NULL,NULL),(5,'john','john1@my.xu.edu.ph','scrypt:32768:8:1$6cIK5mCoPWeHjTUl$0f4d12dfae119a541507e2c58f366381ab7d253e22c20e875e1efd282abc039688d5aae06139f9164de096d2b681648279d87e53c19433e1a21100b90fe8a9a4','student','2026-11-19 09:09:41',NULL,NULL,NULL),(6,'jr','jr@my.xu.edu.ph','scrypt:32768:8:1$7DLGbiXnXa47CSD1$0ff9b4f0ad259927270507644f34c8153e2dbb90e21ffd4a8fc77eefb068f5f733eefceb85462285a257277b20e1d80f0b3bd25ed5fb2104cecc484bc0d5f89e','student','2026-11-20 11:36:07',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -217,4 +219,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-07 23:33:19
+-- Dump completed on 2026-11-20 19:39:23

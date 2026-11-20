@@ -5,6 +5,7 @@ const VENDOR_ID = 2;
 
 let vendorOrders = [];
 let currentFilter = "all";
+let pickupTimerInterval = null;
 
 
 // Load vendor orders from Flask
@@ -127,14 +128,22 @@ function renderOrderActions(order) {
 
     if (status === "ready") {
         return `
+            <div class="pickup-timer">
+                <span id="pickup-timer-${orderId}">
+                    Calculating pickup time...
+                </span>
+            </div>
+
             <div class="vendor-order-actions">
                 <button type="button" class="vendor-action-btn accept-btn"
                     data-order-id="${orderId}" data-new-status="completed">
                     Complete Order
                 </button>
 
-                <button type="button" class="vendor-action-btn reject-btn"
-                    data-order-id="${orderId}" data-new-status="no_show">
+                <button type="button"
+                    class="vendor-action-btn reject-btn no-show-btn"
+                    data-order-id="${orderId}" data-new-status="no_show"
+                    id="no-show-${orderId}" hidden>
                     Mark as No Show
                 </button>
             </div>
@@ -144,6 +153,61 @@ function renderOrderActions(order) {
     return "";
 }
 
+function updatePickupCountdowns() {
+    const readyOrders = vendorOrders.filter(
+        order => order.order_status === "ready"
+    );
+
+    readyOrders.forEach(order => {
+        const timerElement = document.getElementById(
+            `pickup-timer-${order.order_id}`
+        );
+
+        const noShowButton = document.getElementById(
+            `no-show-${order.order_id}`
+        );
+
+        if (!timerElement || !noShowButton || !order.ready_at) {
+            return;
+        }
+
+        const readyTime = new Date(order.ready_at).getTime();
+
+        if (isNaN(readyTime)) {
+            timerElement.textContent = "Unable to calculate pickup time.";
+            return;
+        }
+
+        const elapsed = Date.now() - readyTime;
+        const remaining = (30 * 60 * 1000) - elapsed;
+
+        if (remaining <= 0) {
+            timerElement.textContent = "Pickup time expired.";
+            noShowButton.hidden = false;
+        } else {
+            const minutes = Math.floor(remaining / 60000);
+            const seconds = Math.floor((remaining % 60000) / 1000);
+
+            timerElement.textContent =
+                `Pickup time remaining: ${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+            noShowButton.hidden = true;
+        }
+    });
+}
+
+// Start/restart the countdown update
+function startPickupCountdowns() {
+    if (pickupTimerInterval) {
+        clearInterval(pickupTimerInterval);
+    }
+
+    updatePickupCountdowns();
+
+    pickupTimerInterval = setInterval(() => {
+        updatePickupCountdowns();
+    }, 1000);
+}
 
 // Update an order's status through the Flask API
 async function updateOrderStatus(orderId, newStatus, button) {
@@ -319,7 +383,10 @@ function displayVendorOrders() {
 
         container.appendChild(card);
     });
+    
+    startPickupCountdowns();
 }
+
 
 
 // Handle vendor order action button clicks

@@ -481,6 +481,7 @@ def get_order_details(order_id):
                 o.payment_method,
                 o.payment_status,
                 o.order_status,
+                o.ready_at,
                 o.created_at
             FROM orders o
             JOIN stalls s ON o.stall_id = s.stall_id
@@ -524,6 +525,11 @@ def get_order_details(order_id):
         order["created_at"] = (
             order["created_at"].isoformat()
             if order["created_at"] else None
+        )
+
+        order["ready_at"] = (
+            order["ready_at"].isoformat()
+            if order["ready_at"] else None
         )
 
         for item in order["items"]:
@@ -588,6 +594,7 @@ def get_vendor_orders(vendor_id):
                 o.payment_method,
                 o.payment_status,
                 o.order_status,
+                o.ready_at,
                 o.created_at
             FROM orders o
             JOIN users u ON o.customer_id = u.user_id
@@ -627,6 +634,11 @@ def get_vendor_orders(vendor_id):
                 order["created_at"].isoformat()
                 if order["created_at"] else None
             )
+            
+            order["ready_at"] = (
+                order["ready_at"].isoformat()       
+                if order["ready_at"] else None
+            )
 
             for item in order["items"]:
                 item["price"] = float(item["price"])
@@ -659,7 +671,7 @@ def get_vendor_orders(vendor_id):
     methods=["PATCH"]
 )
 def update_vendor_order_status(vendor_id, order_id):
-    connection = None
+    connection = None   
     cursor = None
 
     try:
@@ -704,7 +716,14 @@ def update_vendor_order_status(vendor_id, order_id):
 
         # Verify that the order belongs to this vendor's stall
         cursor.execute("""
-            SELECT order_id, order_status
+            SELECT
+                order_id,
+                order_status,
+                ready_at,
+                (
+                    ready_at IS NOT NULL
+                    AND ready_at <= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+                ) AS no_show_eligible
             FROM orders
             WHERE order_id = %s
             AND stall_id = %s
@@ -722,6 +741,15 @@ def update_vendor_order_status(vendor_id, order_id):
 
         current_status = order["order_status"]
 
+        # Prevent marking an order as no-show before 30 minutes
+        if new_status == "no_show" and not order["no_show_eligible"]:
+            connection.rollback()
+
+            return jsonify({
+                "success": False,
+                "message": "The customer can only be marked as no-show after 30 minutes."
+            }), 400
+
         if new_status not in allowed_transitions.get(current_status, []):
             connection.rollback()
             return jsonify({
@@ -729,16 +757,21 @@ def update_vendor_order_status(vendor_id, order_id):
                 "message": (
                     f"Cannot change order from {current_status} "
                     f"to {new_status}."
-                )
+                )   
             }), 400
 
         # Update order status
         cursor.execute("""
             UPDATE orders
-            SET order_status = %s
+            SET
+                order_status = %s,  
+                ready_at = CASE
+                    WHEN %s = 'ready' THEN CURRENT_TIMESTAMP
+                    ELSE ready_at
+                END
             WHERE order_id = %s
             AND stall_id = %s
-        """, (new_status, order_id, vendor["stall_id"]))
+        """, (new_status, new_status, order_id, vendor["stall_id"]))
 
         connection.commit()
 

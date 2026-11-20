@@ -9,6 +9,8 @@ const CUSTOMER_ID = loggedInUser ? loggedInUser.user_id : null;
 let isLoadingOrder = false;
 let lastDisplayedStatus = null;
 let orderStatusPolling = null;
+let pickupCountdownInterval = null;
+let currentReadyAt = null;
 
 function escapeHTML(value) {
     return String(value ?? "").replace(/[&<>"']/g, character => ({
@@ -20,6 +22,80 @@ function escapeHTML(value) {
     })[character]);
 }
 
+function updatePickupCountdown() {
+    const timer = document.getElementById("pickup-countdown-time");
+    const note = document.getElementById("pickup-countdown-note");
+
+    if (!currentReadyAt) {
+        return;
+    }
+
+    const readyTime = new Date(currentReadyAt).getTime();
+
+    if (isNaN(readyTime)) {
+        timer.textContent = "--:--";
+        note.textContent = "Pickup time is unavailable.";
+        return;
+    }
+
+    const elapsed = Date.now() - readyTime;
+    const remaining = (30 * 60 * 1000) - elapsed;
+
+    if (remaining <= 0) {
+        timer.textContent = "00:00";
+        note.textContent =
+            "Your 30-minute pickup window has ended. Please contact the stall if needed.";
+
+        clearInterval(pickupCountdownInterval);
+        pickupCountdownInterval = null;
+        return;
+    }
+
+    const minutes = Math.floor(remaining / 60000);
+    const seconds = Math.floor((remaining % 60000) / 1000);
+
+    timer.textContent =
+        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+    note.textContent = "Please collect your order within 30 minutes.";
+}
+
+
+function showPickupCountdown(readyAt) {
+    const card = document.getElementById("pickup-countdown-card");
+
+    card.hidden = false;
+
+    // Avoid restarting the timer during the 5-second API polling
+    if (currentReadyAt === readyAt && pickupCountdownInterval) {
+        return;
+    }
+
+    if (pickupCountdownInterval) {
+        clearInterval(pickupCountdownInterval);
+    }
+
+    currentReadyAt = readyAt;
+
+    updatePickupCountdown();
+
+    pickupCountdownInterval = setInterval(() => {
+        updatePickupCountdown();
+    }, 1000);
+}
+
+
+// Hide the countdown when the order is no longer ready
+function hidePickupCountdown() {
+    document.getElementById("pickup-countdown-card").hidden = true;
+
+    if (pickupCountdownInterval) {
+        clearInterval(pickupCountdownInterval);
+        pickupCountdownInterval = null;
+    }
+
+    currentReadyAt = null;
+}
 
 async function loadOrderDetails(silent = false) {
     const orderId = localStorage.getItem("selectedOrderId");
@@ -62,6 +138,17 @@ async function loadOrderDetails(silent = false) {
 
         const order = data.order;
         const currentStatus = order.order_status.toLowerCase();
+
+        // Show the pickup countdown only when the order is ready
+        if (currentStatus === "ready") {
+            if (order.ready_at) {
+                showPickupCountdown(order.ready_at);
+            } else {
+                hidePickupCountdown();
+            }
+        } else {
+            hidePickupCountdown();
+        }
 
         // Update the display only when the status changes
         if (lastDisplayedStatus !== currentStatus) {
