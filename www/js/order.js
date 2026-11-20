@@ -26,6 +26,19 @@ function displayCart() {
         return;
     }
 
+    // Prevent checkout if the cart contains multiple stalls
+    const uniqueStalls = new Set(
+        cart.map(item => String(item.stall_id))
+    );
+
+    if (uniqueStalls.size > 1) {
+        container.innerHTML =
+            "<p class='error-message'>Your cart contains items from multiple stalls. Please keep items from only one stall.</p>";
+
+        checkoutButton.disabled = true;
+        return;
+    }
+
     checkoutButton.disabled = false;
 
     // Group items by stall

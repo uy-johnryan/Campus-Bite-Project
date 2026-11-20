@@ -234,6 +234,18 @@ def create_orders():
             key = (item_id, stall_id)
             cart_items[key] = cart_items.get(key, 0) + quantity
 
+            # check that all items belong to only one stall
+            unique_stalls = set(
+                stall_id for item_id, stall_id in cart_items.keys()
+            )
+
+            if len(unique_stalls) > 1:
+                connection.rollback()
+                return jsonify({
+                    "success": False,
+                    "message": "You can only place an order from one stall at a time."
+                }), 400
+
         # Group verified items by stall
         orders_by_stall = {}
 

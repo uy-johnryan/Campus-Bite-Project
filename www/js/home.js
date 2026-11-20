@@ -8,30 +8,49 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// Load food items from MySQL
+// Load food items from all stalls
 async function loadHomeItems() {
 
     const container = document.getElementById("home-food-grid");
-
-    // Currently displaying Chicky Fryday items
-    const stallId = 1;
 
     container.innerHTML = "<p>Loading food items...</p>";
 
     try {
 
-        // Retrieve menu items from Flask API
-        const response = await fetch(
-            `${API_BASE_URL}/api/stalls/${stallId}/menu`
+        // Retrieve all stalls
+        const stallsResponse = await fetch(
+            `${API_BASE_URL}/api/stalls`
         );
 
-        const result = await response.json();
+        const stallsResult = await stallsResponse.json();
 
-        if (!response.ok || !result.success) {
-            throw new Error(result.message || "Unable to load food items.");
+        if (!stallsResponse.ok || !stallsResult.success) {
+            throw new Error(stallsResult.message || "Unable to load stalls.");
         }
 
-        homeMenuItems = result.menu_items;
+        homeMenuItems = [];
+
+        // Retrieve menu items from every stall
+        for (const stall of stallsResult.stalls) {
+
+            const response = await fetch(
+                `${API_BASE_URL}/api/stalls/${stall.stall_id}/menu`
+            );
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || "Unable to load menu.");
+            }
+
+            // Attach stall information to each food item
+            result.menu_items.forEach(item => {
+                item.stall_name = stall.stall_name;
+                item.stall_id = stall.stall_id;
+
+                homeMenuItems.push(item);
+            });
+        }
 
         // Load saved favorites
         await loadHomeFavoriteIds();
@@ -114,26 +133,21 @@ function displayHomeItems() {
         const image = document.createElement("img");
         image.alt = item.item_name;
 
-        if (item.image) {
+        image.src = item.image && item.image.trim() !== ""
+            ? item.image
+            : "assets/img/placeholder.jpg";
 
-            image.src = item.image;
-
-            image.onerror = function () {
-                this.style.display = "none";
-            };
-
-        } else {
-
-            image.style.display = "none";
-
-        }
+        image.onerror = function () {
+            this.onerror = null;
+            this.src = "assets/img/placeholder.jpg";
+        };
 
         // Favorite button
-        const favoriteButton = document.createElement("button");
+        const favoriteButton = document.createElement("button");    
         favoriteButton.type = "button";
         favoriteButton.className = "favorite-btn";
 
-        updateHomeHeart(
+        updateHomeHeart(    
             favoriteButton,
             favoriteItemIds.has(Number(item.item_id))
         );
@@ -180,14 +194,16 @@ function displayHomeItems() {
         cardDetails.appendChild(textInfo);
         cardDetails.appendChild(availability);
 
-        // Add food item to cart when the card is clicked
+        // Add food item to cart when clicked
         card.addEventListener("click", function () {
+
             if (!item.availability) {
                 alert("This item is currently unavailable.");
                 return;
             }
 
             addHomeItemToCart(item);
+
         });
 
         card.appendChild(imageWrapper);
@@ -231,7 +247,6 @@ async function toggleHomeFavorite(item, button) {
 
         if (isFavorite) {
 
-            // Remove favorite
             response = await fetch(
                 `${API_BASE_URL}/api/users/${userId}/favorites/${itemId}`,
                 {
@@ -241,7 +256,6 @@ async function toggleHomeFavorite(item, button) {
 
         } else {
 
-            // Add favorite
             response = await fetch(
                 `${API_BASE_URL}/api/users/${userId}/favorites`,
                 {
@@ -263,7 +277,6 @@ async function toggleHomeFavorite(item, button) {
             throw new Error(result.message || "Unable to update favorite.");
         }
 
-        // Update local favorites
         if (isFavorite) {
             favoriteItemIds.delete(itemId);
         } else {
@@ -285,17 +298,39 @@ async function toggleHomeFavorite(item, button) {
 
 }
 
+
+// Add food item to cart
 function addHomeItemToCart(item) {
     const CART_KEY = "campusBiteCart";
 
     let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
 
-    const stallId = Number(item.stall_id || 1);
-    const stallName = "Chicky Fryday";
+    const stallId = Number(item.stall_id);
+    const stallName = item.stall_name;
 
+    // Check if the cart already contains items from another stall
+    const hasDifferentStall = cart.some(
+        cartItem => Number(cartItem.stall_id) !== stallId
+    );
+
+    if (hasDifferentStall) {
+        const confirmChange = confirm(
+            "Your cart contains items from another stall.\n\n" +
+            "Would you like to clear your current cart and order from " +
+            stallName + " instead?"
+        );
+
+        if (!confirmChange) {
+            return;
+        }
+
+        cart = [];
+    }
+
+    // Check if item already exists in cart
     const existingItem = cart.find(cartItem =>
         String(cartItem.item_id) === String(item.item_id) &&
-        String(cartItem.stall_id) === String(stallId)
+        Number(cartItem.stall_id) === stallId
     );
 
     if (existingItem) {

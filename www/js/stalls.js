@@ -1,6 +1,7 @@
 window.API_BASE_URL = window.API_BASE_URL || "http://127.0.0.1:5000";
 
 async function loadStalls() {
+
     const container = document.getElementById("stalls-container");
 
     if (!container) return;
@@ -8,6 +9,7 @@ async function loadStalls() {
     container.innerHTML = "<p>Loading stalls...</p>";
 
     try {
+
         const response = await fetch(`${window.API_BASE_URL}/api/stalls`);
         const data = await response.json();
 
@@ -23,26 +25,32 @@ async function loadStalls() {
         }
 
         data.stalls.forEach(stall => {
-            // Create the card
+
+            // Create stall card
             const card = document.createElement("div");
 
             card.className = stall.status === "open"
                 ? "food-card green"
                 : "food-card";
 
-            // Image wrapper
             const imageWrapper = document.createElement("div");
             imageWrapper.className = "image-wrapper";
 
             const image = document.createElement("img");
-            image.src = stall.logo || "assets/img/stalls/ChickyFrydayLogo.jpg";
+
+            image.src = stall.logo && stall.logo.trim() !== ""
+                ? stall.logo
+                : "assets/img/placeholder.jpg";
+
             image.alt = stall.stall_name;
 
             image.onerror = function () {
-                this.src = "assets/img/stalls/ChickyFrydayLogo.jpg";
+                this.onerror = null;
+                this.src = "assets/img/placeholder.jpg";
             };
 
             imageWrapper.appendChild(image);
+            card.appendChild(imageWrapper);
 
             // Card details
             const cardDetails = document.createElement("div");
@@ -60,26 +68,36 @@ async function loadStalls() {
             const rating = document.createElement("div");
             rating.className = "rating";
 
-            const star = document.createElement("i");
-            star.className = "fa-solid fa-star";
+            if (stall.rating !== null && stall.rating !== undefined) {
 
-            const ratingValue = document.createElement("span");
-            ratingValue.textContent = stall.rating ?? "N/A";
+                const star = document.createElement("i");
+                star.className = "fa-solid fa-star";
 
-            rating.appendChild(star);
-            rating.appendChild(ratingValue);
+                const ratingValue = document.createElement("span");
+                ratingValue.textContent = Number(stall.rating).toFixed(1);
+
+                rating.appendChild(star);
+                rating.appendChild(ratingValue);
+
+            } else {
+
+                const ratingValue = document.createElement("span");
+                ratingValue.textContent = "No rating";
+
+                rating.appendChild(ratingValue);
+
+            }
 
             cardDetails.appendChild(textInfo);
             cardDetails.appendChild(rating);
 
-            // Assemble the card
-            card.appendChild(imageWrapper);
             card.appendChild(cardDetails);
 
-            // Open the stall menu when clicked
+            // Open stall menu when clicked
             card.style.cursor = "pointer";
 
             card.addEventListener("click", () => {
+
                 if (stall.status !== "open") {
                     alert("This stall is currently closed.");
                     return;
@@ -89,15 +107,20 @@ async function loadStalls() {
                 localStorage.setItem("selectedStallName", stall.stall_name);
 
                 window.location.href = "stall-menu.html";
+
             });
 
             container.appendChild(card);
+
         });
 
     } catch (error) {
+
         console.error("Error loading stalls:", error);
+
         container.innerHTML =
             "<p class='error-message'>Unable to load stalls. Please try again later.</p>";
+
     }
 }
 

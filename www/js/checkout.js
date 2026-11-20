@@ -40,6 +40,22 @@ function displayCheckout() {
         return;
     }
 
+    // Prevent checkout if the cart contains multiple stalls
+    const uniqueStalls = new Set(
+        cart.map(item => String(item.stall_id))
+    );
+
+    if (uniqueStalls.size > 1) {
+        itemsContainer.innerHTML =
+            "<p class='error-message'>Your cart contains items from multiple stalls. Please return to your order and keep items from only one stall.</p>";
+
+        productsCount.textContent = "Invalid Cart";
+        footerTotal.textContent = "Total: P 0.00";
+        sendOrderButton.disabled = true;
+
+        return;
+    }
+
     sendOrderButton.disabled = false;
 
     let subtotal = 0;
@@ -72,11 +88,6 @@ function displayCheckout() {
         subtotal += Number(item.price) * item.quantity;
         totalQuantity += item.quantity;
     });
-
-    // Service fee: P5 per stall
-    const uniqueStalls = new Set(
-        cart.map(item => String(item.stall_id))
-    );
 
     const serviceFee = uniqueStalls.size * SERVICE_FEE;
     const total = subtotal + serviceFee;
@@ -172,6 +183,16 @@ async function submitOrder() {
     }
 
     const cart = getCart();
+
+    const uniqueStalls = new Set(
+        cart.map(item => String(item.stall_id))
+    );
+
+    if (uniqueStalls.size > 1) {
+        alert("You can only submit an order from one stall at a time.");
+        policyOverlay.classList.remove("active");
+        return;
+    }
 
     if (cart.length === 0) {
         alert("Your cart is empty.");

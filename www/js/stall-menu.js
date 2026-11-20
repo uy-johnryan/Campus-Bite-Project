@@ -286,27 +286,42 @@ async function toggleFavorite(item, button) {
 function addToCart(item) {
     const CART_KEY = "campusBiteCart";
 
-    // Get existing cart
     let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
 
-    // Get selected stall information
-    const stallId = localStorage.getItem("selectedStallId");
+    const stallId = Number(localStorage.getItem("selectedStallId"));
     const stallName = document.getElementById("stall-name").textContent;
+
+    // Check if the cart already contains items from another stall
+    const hasDifferentStall = cart.some(
+        cartItem => Number(cartItem.stall_id) !== stallId
+    );
+
+    if (hasDifferentStall) {
+        const confirmChange = confirm(
+            "Your cart contains items from another stall.\n\n" +
+            "Would you like to clear your current cart and order from " +
+            stallName + " instead?"
+        );
+
+        if (!confirmChange) {
+            return;
+        }
+
+        cart = [];
+    }
 
     // Check if item already exists in cart
     const existingItem = cart.find(cartItem =>
         String(cartItem.item_id) === String(item.item_id) &&
-        String(cartItem.stall_id) === String(stallId)
+        Number(cartItem.stall_id) === stallId
     );
 
     if (existingItem) {
-        // Increase quantity if already added
         existingItem.quantity++;
     } else {
-        // Add new item to cart
         cart.push({
             item_id: item.item_id,
-            stall_id: Number(stallId),
+            stall_id: stallId,
             stall_name: stallName,
             item_name: item.item_name,
             price: Number(item.price),
@@ -314,7 +329,6 @@ function addToCart(item) {
         });
     }
 
-    // Save updated cart
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
 
     alert(item.item_name + " added to your order!");

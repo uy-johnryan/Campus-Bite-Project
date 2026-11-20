@@ -1,7 +1,16 @@
 const API_BASE_URL = "http://127.0.0.1:5000";
 
-// Temporary development vendor account
-const VENDOR_ID = 2;
+const loggedInUser = JSON.parse(
+    localStorage.getItem("campusBiteUser")
+);
+
+// Check if the logged-in user is a vendor
+if (!loggedInUser || loggedInUser.role !== "vendor") {
+    alert("Please log in using a vendor account.");
+    window.location.href = "index.html";
+}
+
+const VENDOR_ID = loggedInUser ? loggedInUser.user_id : null;
 
 let vendorOrders = [];
 let currentFilter = "all";
@@ -454,7 +463,7 @@ document.getElementById("logout-btn").addEventListener("click", () => {
     localStorage.removeItem("user_id");
     localStorage.removeItem("loggedInUser");
     localStorage.removeItem("campusBiteUser");
-    localStorage.removeItem("selectedOrderId");
+    localStorage.removeItem("selectedOrderId"); 
 
     window.location.href = "index.html";
 });
