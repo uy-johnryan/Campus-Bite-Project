@@ -151,3 +151,8 @@ cordova build android
 ```
 
 **Important:** The frontend API URL must point to the computer running Flask. When testing on a physical Android device, `127.0.0.1` refers to the device itself, not your computer. Update the API base URL to your computer's local network IP address (e.g., `const API_BASE_URL = "http://192.168.1.5:5000";`) and make sure both devices are connected to the same network.
+
+## Progress Report
+Completed the draft of the final paper. Addition of Stalls and food items are complete, minor features are added such as the 30 minute pickup timer for orders, and a policy disclosure notification before hitting the checkout button is added. Did some testing with the functionalities in the app and so far it is a success. 
+
+Finalization of the final paper remains to be completed and final testing with the apk and server to look for final improvements. 
